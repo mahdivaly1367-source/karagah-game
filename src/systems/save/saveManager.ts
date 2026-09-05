@@ -1,3 +1,8 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { GameState } from '../../types/game';
 
 export interface SaveSlotData {
@@ -19,10 +24,60 @@ export interface SaveSlotData {
   };
 }
 
+export const CURRENT_SAVE_VERSION = 2;
 const STORAGE_KEY_PREFIX = 'khankholeh_save_slot_';
 const AUTO_SAVE_KEY = 'khankholeh_autosave';
 
 export const SaveManager = {
+  /**
+   * Migrate old or incomplete saved states to current schema version
+   */
+  migrateState(savedState: any): SaveSlotData['state'] {
+    const version = typeof savedState.saveVersion === 'number' ? savedState.saveVersion : 1;
+
+    // Base polyfills
+    const polyfilled: SaveSlotData['state'] = {
+      currentScene: savedState.currentScene || 'outer_alley',
+      inventory: Array.isArray(savedState.inventory) ? [...savedState.inventory] : [],
+      evidence: typeof savedState.evidence === 'object' && savedState.evidence ? { ...savedState.evidence } : {},
+      journal: Array.isArray(savedState.journal) ? [...savedState.journal] : [],
+      storyFlags: typeof savedState.storyFlags === 'object' && savedState.storyFlags ? { ...savedState.storyFlags } : {},
+      dialogueFlags: typeof savedState.dialogueFlags === 'object' && savedState.dialogueFlags ? { ...savedState.dialogueFlags } : {},
+      puzzleFlags: typeof savedState.puzzleFlags === 'object' && savedState.puzzleFlags ? { ...savedState.puzzleFlags } : {},
+      relationshipFlags: typeof savedState.relationshipFlags === 'object' && savedState.relationshipFlags ? { ...savedState.relationshipFlags } : {},
+      saveVersion: CURRENT_SAVE_VERSION,
+      settings: savedState.settings ? {
+        textSize: savedState.settings.textSize || 'normal',
+        dialogueSpeed: savedState.settings.dialogueSpeed || 'normal',
+        masterVolume: typeof savedState.settings.masterVolume === 'number' ? savedState.settings.masterVolume : 80,
+        musicVolume: typeof savedState.settings.musicVolume === 'number' ? savedState.settings.musicVolume : 50,
+        sfxVolume: typeof savedState.settings.sfxVolume === 'number' ? savedState.settings.sfxVolume : 85,
+        highContrast: !!savedState.settings.highContrast,
+        subtitles: savedState.settings.subtitles !== false,
+        hintStrength: savedState.settings.hintStrength || 'subtle',
+      } : {
+        textSize: 'normal',
+        dialogueSpeed: 'normal',
+        masterVolume: 80,
+        musicVolume: 50,
+        sfxVolume: 85,
+        highContrast: false,
+        subtitles: true,
+        hintStrength: 'subtle',
+      },
+    };
+
+    // Version-specific migrations
+    if (version < 2) {
+      // Version 2 introduced Khan's misjudgment and deduction graph flags
+      if (!polyfilled.storyFlags.khan_misjudgment_bandit_theory) {
+        polyfilled.storyFlags.khan_misjudgment_bandit_theory = false;
+      }
+    }
+
+    return polyfilled;
+  },
+
   saveToSlot(slot: number | 'auto', state: GameState, customTitle?: string): boolean {
     try {
       const sceneNames: Record<string, string> = {
@@ -31,7 +86,7 @@ export const SaveManager = {
         courtyard: 'حیاط مسافرخانه',
         mirza_room: 'اتاق میرزا صفدر',
         stable: 'اصطبل کاروانسرا',
-        act1_outro: 'پرده اول: پایان'
+        act1_outro: 'پرده اول: پایان',
       };
 
       const now = new Date();
@@ -39,7 +94,7 @@ export const SaveManager = {
         month: 'short',
         day: 'numeric',
         hour: '2-digit',
-        minute: '2-digit'
+        minute: '2-digit',
       });
 
       const slotData: SaveSlotData = {
@@ -56,9 +111,9 @@ export const SaveManager = {
           dialogueFlags: { ...state.dialogueFlags },
           puzzleFlags: { ...state.puzzleFlags },
           relationshipFlags: { ...state.relationshipFlags },
-          saveVersion: state.saveVersion || 1,
-          settings: { ...state.settings }
-        }
+          saveVersion: CURRENT_SAVE_VERSION,
+          settings: { ...state.settings },
+        },
       };
 
       const key = slot === 'auto' ? AUTO_SAVE_KEY : `${STORAGE_KEY_PREFIX}${slot}`;
@@ -75,7 +130,12 @@ export const SaveManager = {
       const key = slot === 'auto' ? AUTO_SAVE_KEY : `${STORAGE_KEY_PREFIX}${slot}`;
       const raw = localStorage.getItem(key);
       if (!raw) return null;
-      return JSON.parse(raw) as SaveSlotData;
+      const parsed = JSON.parse(raw);
+      if (!parsed || !parsed.state) return null;
+
+      // Ensure data conforms to latest schema via migration
+      parsed.state = this.migrateState(parsed.state);
+      return parsed as SaveSlotData;
     } catch (e) {
       console.error('Error loading save slot:', e);
       return null;
@@ -94,5 +154,5 @@ export const SaveManager = {
   deleteSlot(slot: number | 'auto'): void {
     const key = slot === 'auto' ? AUTO_SAVE_KEY : `${STORAGE_KEY_PREFIX}${slot}`;
     localStorage.removeItem(key);
-  }
+  },
 };

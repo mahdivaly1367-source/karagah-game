@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { soundManager } from '../../systems/audio/soundManager';
-import { Sparkles, CheckCircle2, RotateCcw, Home } from 'lucide-react';
+import { Sparkles, CheckCircle2, RotateCcw, Home, ArrowLeft } from 'lucide-react';
 
 interface OutroAct1Props {
   onRestart: () => void;
   onReturnToMenu: () => void;
+  onStartAct2?: () => void;
 }
 
-export const OutroAct1: React.FC<OutroAct1Props> = ({ onRestart, onReturnToMenu }) => {
+export const OutroAct1: React.FC<OutroAct1Props> = ({ onRestart, onReturnToMenu, onStartAct2 }) => {
   const [step, setStep] = useState(0);
 
   useEffect(() => {
@@ -104,19 +105,28 @@ export const OutroAct1: React.FC<OutroAct1Props> = ({ onRestart, onReturnToMenu 
           </p>
 
           <div className="pt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+            {onStartAct2 && (
+              <button
+                onClick={onStartAct2}
+                className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-stone-950 font-black text-sm md:text-base flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(245,158,11,0.5)] border border-amber-300 transition-all transform hover:scale-105"
+              >
+                <span>شروع پرده دوم: دفتر خالی</span>
+                <ArrowLeft className="w-5 h-5" />
+              </button>
+            )}
             <button
               onClick={onReturnToMenu}
-              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#b45309] hover:bg-[#d97706] text-white font-bold text-sm md:text-base flex items-center justify-center gap-2 shadow-2xl transition-all"
+              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#29170e] hover:bg-[#3d2417] text-[#eddac6] hover:text-white border border-[#7a4e2f] font-semibold text-sm md:text-base flex items-center justify-center gap-2 transition-all"
             >
               <Home className="w-5 h-5" />
               <span>بازگشت به منوی اصلی</span>
             </button>
             <button
               onClick={onRestart}
-              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#29170e] hover:bg-[#3d2417] text-[#eddac6] hover:text-white border border-[#7a4e2f] font-semibold text-sm md:text-base flex items-center justify-center gap-2 transition-all"
+              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#1c100a] hover:bg-[#2e1a10] text-[#a8896c] hover:text-[#d6b493] border border-[#523520] text-xs md:text-sm flex items-center justify-center gap-2 transition-all"
             >
-              <RotateCcw className="w-5 h-5" />
-              <span>گشت و گذار مجدد در مسافرخانه</span>
+              <RotateCcw className="w-4 h-4" />
+              <span>بررسی مجدد پرده اول</span>
             </button>
           </div>
         </div>

@@ -42,12 +42,18 @@ export const TopBar: React.FC<TopBarProps> = ({
       className="absolute top-3 left-3 right-3 z-30 flex items-center justify-between pointer-events-none select-none"
       dir="rtl"
     >
-      {/* Location Badge */}
-      <div className="pointer-events-auto flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-[#1d120a]/90 border border-[#8a5b39] shadow-xl backdrop-blur-md">
-        <Compass className="w-4 h-4 text-[#dca66e]" />
-        <span className="text-xs md:text-sm font-bold text-[#faecd8]">
-          {currentSceneName}
-        </span>
+      {/* Location & Act Badges */}
+      <div className="pointer-events-auto flex items-center gap-2">
+        <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-[#1d120a]/90 border border-[#8a5b39] shadow-xl backdrop-blur-md">
+          <Compass className="w-4 h-4 text-[#dca66e]" />
+          <span className="text-xs md:text-sm font-bold text-[#faecd8]">
+            {currentSceneName}
+          </span>
+        </div>
+        <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-[#2a170d]/80 border border-[#784d2c] text-[11px] font-semibold text-[#f0d6b6] backdrop-blur-md shadow-lg">
+          <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+          <span>{gameState.act === 2 || gameState.currentScene.includes('act2') || ['bazaar', 'paper_shop', 'yaqub_house', 'yaqub_courtyard', 'qanat_entrance'].includes(gameState.currentScene) ? 'پرده دوم: دفتر خالی' : 'پرده اول: جسد ناپیدا'}</span>
+        </div>
       </div>
 
       {/* Main Controls Tray */}

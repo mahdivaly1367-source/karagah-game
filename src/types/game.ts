@@ -1,4 +1,17 @@
-export type SceneId = 'intro' | 'mirza_room' | 'courtyard' | 'stable' | 'outer_alley' | 'act1_outro';
+export type SceneId = 
+  | 'intro' 
+  | 'mirza_room' 
+  | 'courtyard' 
+  | 'stable' 
+  | 'outer_alley' 
+  | 'act1_outro'
+  | 'mirza_room_act2'
+  | 'bazaar'
+  | 'papermaker_shop'
+  | 'yaqub_house'
+  | 'yaqub_courtyard'
+  | 'qanat_entrance'
+  | 'act2_outro';
 
 export type CursorType = 'default' | 'inspect' | 'talk' | 'take' | 'use' | 'move' | 'combine';
 
@@ -28,7 +41,7 @@ export interface Evidence {
 
 export interface JournalEntry {
   id: string;
-  category: 'people' | 'locations' | 'evidence' | 'notes';
+  category: 'people' | 'locations' | 'evidence' | 'notes' | 'open_questions';
   title: string;
   content: string;
   timestamp: string;
@@ -65,7 +78,7 @@ export interface DialogueNode {
   id: string;
   speaker: string;
   speakerTitle?: string;
-  portraitKey: 'khan' | 'kazem' | 'nemat' | 'morteza';
+  portraitKey: 'khan' | 'kazem' | 'nemat' | 'morteza' | 'yaqub' | 'sadiq' | 'qasem' | 'mahbanoo';
   text: string;
   options: DialogueOption[];
   onEnter?: (state: GameState) => Partial<GameState> | void;
@@ -83,6 +96,7 @@ export interface GameSettings {
 }
 
 export interface GameState {
+  act?: number;
   currentScene: SceneId;
   inventory: string[];
   activeItemId: string | null;

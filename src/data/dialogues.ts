@@ -17,6 +17,18 @@ export const DIALOGUE_NODES: Record<string, DialogueNode> = {
         nextNodeId: 'kazem_incident',
       },
       {
+        id: 'opt_kazem_bandit_theory',
+        text: '«کاظم! نکنه کار، کارِ راهزن‌های بیابانی باشه که شبونه شبیخون زدن؟»',
+        condition: (s) => !!s.storyFlags.khan_misjudgment_bandit_theory && !s.storyFlags.khan_misjudgment_corrected,
+        nextNodeId: 'kazem_bandit_theory_node',
+      },
+      {
+        id: 'opt_kazem_bandit_corrected',
+        text: '«کاظم، حدس اولیه‌م درباره راهزن‌ها باد هوا بود! ابریشم سرخ کجا و راهزن پا برهنه کجا!»',
+        condition: (s) => !!s.storyFlags.khan_misjudgment_corrected,
+        nextNodeId: 'kazem_bandit_corrected_node',
+      },
+      {
         id: 'opt_kazem_safdar',
         text: 'این میرزا صفدر چه‌جور آدمی بود؟ با کسی خرده‌حسابی داشت؟',
         nextNodeId: 'kazem_safdar',
@@ -176,6 +188,34 @@ export const DIALOGUE_NODES: Record<string, DialogueNode> = {
       }
     ]
   },
+  kazem_bandit_theory_node: {
+    id: 'kazem_bandit_theory_node',
+    speaker: 'کاظم',
+    speakerTitle: 'پادو آبادی',
+    portraitKey: 'kazem',
+    text: 'خان! راهزن کجا بود؟! سگ‌های گله اصطبل تا صبح یه بار هم واق‌واق نکردن! بعدشم راهزن اگه می‌زد، اول طویله و قاطرهای بارکش حاج مرتضی رو می‌چپاول کرد، نه اینکه بیاد تو اتاق میرزا در رو هم پشت سرش چفت کنه!',
+    options: [
+      {
+        id: 'opt_kazem_bandit_theory_back',
+        text: 'شاید هم حق با تو باشه پسر... این خط خطوط روی دیوار خیلی تمیزتر از دست زمخت راهزنه.',
+        nextNodeId: 'kazem_root',
+      }
+    ]
+  },
+  kazem_bandit_corrected_node: {
+    id: 'kazem_bandit_corrected_node',
+    speaker: 'کاظم',
+    speakerTitle: 'پادو آبادی',
+    portraitKey: 'kazem',
+    text: '(چشمانش برق می‌زند) دیدی گفتم خان؟! دزد همین جا زیر گوش خودمونه! کار خود آدم‌های گردن‌کلفت کاروانسرائه!',
+    options: [
+      {
+        id: 'opt_kazem_bandit_corr_back',
+        text: 'آفرین... حالا صدات رو بنداز پس کله‌ت تا دم به تله بدن.',
+        nextNodeId: 'kazem_root',
+      }
+    ]
+  },
 
   // -------------------------------------------------------------
   // KARBALAEI NEMAT (کربلایی نعمت)
@@ -191,6 +231,12 @@ export const DIALOGUE_NODES: Record<string, DialogueNode> = {
         id: 'opt_nemat_incident',
         text: 'چرا می‌خوای قضیه ناپدید شدنش رو ماست‌مالی کنی، کربلایی؟',
         nextNodeId: 'nemat_incident',
+      },
+      {
+        id: 'opt_nemat_bandit_deflect',
+        text: '«کربلایی! اول حدس زدم راهزن‌های بیابان ریختن، ولی الان بوی نخ ابریشم سرخ شهری میاد... دزد تو همین کاروانسرائه!»',
+        condition: (s) => !!s.storyFlags.khan_misjudgment_corrected,
+        nextNodeId: 'nemat_bandit_corrected_node',
       },
       {
         id: 'opt_nemat_safdar',
@@ -327,6 +373,20 @@ export const DIALOGUE_NODES: Record<string, DialogueNode> = {
       {
         id: 'opt_nemat_back',
         text: 'هرچی بیشتر داد می‌زنی، بوی دروغت تندتر میشه کربلایی.',
+        nextNodeId: 'nemat_root',
+      }
+    ]
+  },
+  nemat_bandit_corrected_node: {
+    id: 'nemat_bandit_corrected_node',
+    speaker: 'کربلایی نعمت',
+    speakerTitle: 'مسافرخانه‌چی',
+    portraitKey: 'nemat',
+    text: '(تسبیحش به لرزه می‌افتد) چرت و پرت نگو خانخله! ابریشم کجا بود؟! داری برای کاروانسرای بی‌گناه مردم انگ می‌تراشی تا دکان باج‌گیری وا کنی؟! برو رد کارت تا نگفتم مهترها بیرون پرتت کنن!',
+    options: [
+      {
+        id: 'opt_nemat_bandit_back',
+        text: 'هرچی بیشتر هول بشی، طناب دار قشنگ‌تر دورت می‌پیچه کربلایی... برمی‌گردم.',
         nextNodeId: 'nemat_root',
       }
     ]
@@ -534,6 +594,445 @@ export const DIALOGUE_NODES: Record<string, DialogueNode> = {
       {
         id: 'opt_morteza_close',
         text: 'خانخله کلاه نمدیش رو محکم نگه می‌داره، نگران سر من نباش.',
+        nextNodeId: undefined,
+      }
+    ]
+  },
+
+  // ========================================================
+  // ACT 2 DIALOGUES: MASHHADI QASEM (مشهدی قاسم)
+  // ========================================================
+  qasem_root: {
+    id: 'qasem_root',
+    speaker: 'مشهدی قاسم',
+    speakerTitle: 'رمال و بقال بازارچه',
+    portraitKey: 'qasem',
+    text: 'به‌به! خانخله نامدار، کارآگاه بیابان‌خواب! قدم بر چشم ما گذاشتی. بگو ببینم، بوی طلای گمشده به مشامت خورده یا سرکتاب باز کردن برای دفع نحوست این روز باریک می‌خواهی؟',
+    options: [
+      {
+        id: 'opt_qasem_ghoul',
+        text: '«شنیدم باز دهانت گرم شده و برای مردم کوچه از جن و طلسم قنات قصه می‌بافی!»',
+        nextNodeId: 'qasem_rumors_ghoul',
+      },
+      {
+        id: 'opt_qasem_lemon',
+        text: '«قاسم، گفتی نوشته‌های غیبی با آب‌لیمو و آتش چراغ رو میان؟ راسته یا کلک دکانداریه؟»',
+        nextNodeId: 'qasem_lemon_ink_advice',
+      },
+      {
+        id: 'opt_qasem_mirza',
+        text: '«میرزا صفدر قبل از حادثه سراغ تو نیومده بود؟ چی می‌خواست؟»',
+        nextNodeId: 'qasem_mirza_debt',
+      },
+      {
+        id: 'opt_qasem_confront',
+        text: '«قاسم! پلاک مسین ضرابخانه و دروغ کاروان شتران رو به کی فروختی؟ کی بهت پول داد این اراجیف رو سر هم کنی؟»',
+        condition: (s) => !!s.evidence.ev_act2_copper_token_cipher || !!s.puzzleFlags.empty_ledger_act2_solved,
+        nextNodeId: 'qasem_confront_hoax',
+      },
+      {
+        id: 'opt_qasem_leave',
+        text: 'فعلاً بشین پشت بساطت و کمتر چرند به خورد مردم بده.',
+        nextNodeId: undefined,
+      }
+    ]
+  },
+  qasem_rumors_ghoul: {
+    id: 'qasem_rumors_ghoul',
+    speaker: 'مشهدی قاسم',
+    speakerTitle: 'رمال و بقال بازارچه',
+    portraitKey: 'qasem',
+    text: 'چرند چیه خان؟! دیشب باد که زوزه کشید، صدای سم جن‌های کویر از طرف مظهر قنات کهنه میومد! کاروانسرادارها هی میگن هفت صندوق، هفت صندوق... ولی من میگم طلسم هفتاد ساله شکسته و زمین اونا رو بلعیده! هر کی پاشو بذاره دم دهانه قنات، خونش پای خودشه!',
+    options: [
+      {
+        id: 'opt_qasem_ghoul_doubt',
+        text: '«تو از کی تاحالا وکیل جن‌های کویری شدی قاسم؟ بگو ببینم پشت این حرف‌ها کی نشسته؟»',
+        nextNodeId: 'qasem_root',
+      }
+    ]
+  },
+  qasem_lemon_ink_advice: {
+    id: 'qasem_lemon_ink_advice',
+    speaker: 'مشهدی قاسم',
+    speakerTitle: 'رمال و بقال بازارچه',
+    portraitKey: 'qasem',
+    text: 'هاها! اگر کاغذ سفید دستته و فکر می‌کنی رازی توشه، یه شیشه آب‌لیمو شیرازی از من بخر، دو قطره بچکون و بگیر روی شعله چراغ‌موشی! اگر جوهر غیبی باشه مثل آفتاب روشن میشه! (یک شیشه آب‌لیمو روی پیشخوان می‌گذارد)',
+    options: [
+      {
+        id: 'opt_qasem_take_lemon',
+        text: '«بده بیاد اون شیشه رو... هرچند حس بویاییم میگه داری چاخان می‌کنی.»',
+        action: (s) => {
+          const inv = [...s.inventory];
+          if (!inv.includes('lemon_juice_bottle')) inv.push('lemon_juice_bottle');
+          return { inventory: inv };
+        },
+        nextNodeId: 'qasem_lemon_given',
+      },
+      {
+        id: 'opt_qasem_back_lemon',
+        text: '«من گول معجون‌های تو رو نمی‌خورم قاسم.»',
+        nextNodeId: 'qasem_root',
+      }
+    ]
+  },
+  qasem_lemon_given: {
+    id: 'qasem_lemon_given',
+    speaker: 'مشهدی قاسم',
+    speakerTitle: 'رمال و بقال بازارچه',
+    portraitKey: 'qasem',
+    text: 'بفرما خان! امتحانش مجانیه... ولی مواظب باش کاغذ دستت جزغاله نشه که دودش به چشم خودت میره!',
+    options: [
+      {
+        id: 'opt_qasem_lemon_leave',
+        text: 'می‌رم امتحانش کنم ببینم چند مرده حلاجی.',
+        nextNodeId: 'qasem_root',
+      }
+    ]
+  },
+  qasem_mirza_debt: {
+    id: 'qasem_mirza_debt',
+    speaker: 'مشهدی قاسم',
+    speakerTitle: 'رمال و بقال بازارچه',
+    portraitKey: 'qasem',
+    text: 'میرزا دو روز پیش اومد اینجا، رنگش مثل گچ سفید بود! سراغ تاریخچه قنات متروک و کاروان هفت سال پیش نایب‌الحکومه رو می‌گرفت. می‌گفت: «قاسم، آیا ممکنه کاروانی بیاد و خاک کویر بوی شتر نگیره؟» منم گفتم میرزا، زیاد دود چراغ خوردی، عقلت قاطی کرده!',
+    options: [
+      {
+        id: 'opt_qasem_mirza_thought',
+        text: '«عقل اون قاطی نکرده بود... بوی حقه رو از فرسنگ‌ها شنیده بود.»',
+        nextNodeId: 'qasem_root',
+      }
+    ]
+  },
+  qasem_confront_hoax: {
+    id: 'qasem_confront_hoax',
+    speaker: 'مشهدی قاسم',
+    speakerTitle: 'رمال و بقال بازارچه',
+    portraitKey: 'qasem',
+    text: '(دستپاچه می‌شود و تسبیح از دستش می‌افتد) خ... خانخله! صداتو بیار پایین، مگه سرت به تنت سنگینی می‌کنه؟! من فقط یه بقال بدبختم، گناه من چیه؟!',
+    options: [
+      {
+        id: 'opt_qasem_squeeze_truth',
+        text: '«حرف بزن قاسم! کی بهت پول داد تا مردم رو از قنات بترسونی و افسانه جن ببافی؟»',
+        nextNodeId: 'qasem_confess_truth',
+      }
+    ]
+  },
+  qasem_confess_truth: {
+    id: 'qasem_confess_truth',
+    speaker: 'مشهدی قاسم',
+    speakerTitle: 'رمال و بقال بازارچه',
+    portraitKey: 'qasem',
+    text: 'چند شب پیش، زنی با روبنده ابریشمی بنفش و صدای خش‌دار اومد پیشم. ده اشرفی طلا داد و گفت: «تا سه روز توی بازار هوار بکش که قنات طلسم شده و کاروان جن‌ها بار طلا رو برده زیر زمین! نگذار کسی هوس کنه سمت چاه‌ها بره.» به روح پدرم قسم من خبر نداشتم قتلی در کاره خان!',
+    options: [
+      {
+        id: 'opt_qasem_finish_confession',
+        text: '«زن با روبنده بنفش... رعنا! پس ریشه‌های توطئه تا عمق حرمسرای والی میرسه. دهنت رو ببند و از جات تکون نخور!»',
+        nextNodeId: undefined,
+        action: (s) => ({
+          puzzleFlags: { ...s.puzzleFlags, qasem_confessed: true }
+        })
+      }
+    ]
+  },
+
+  // ========================================================
+  // ACT 2 DIALOGUES: OSTA SADIQ (اوستا صادق کاغذفروش)
+  // ========================================================
+  sadiq_root: {
+    id: 'sadiq_root',
+    speaker: 'اوستا صادق',
+    speakerTitle: 'کاغذفروش و صحاف',
+    portraitKey: 'sadiq',
+    text: 'سلام و رحمت حق بر خانخله تیزبین. بفرمایید، اینجا دکان کاغذ و مرکب است. هر کاغذی که در این ولایت ورق می‌خورد، شناسنامه‌اش پیش من است.',
+    options: [
+      {
+        id: 'opt_sadiq_paper_texture',
+        text: '«اوستا صادق، این کاغذ دفترچه میرزا صفدر رو ببین؛ چه جنس و بافتی داره؟»',
+        nextNodeId: 'sadiq_mirza_paper',
+      },
+      {
+        id: 'opt_sadiq_indentation_secret',
+        text: '«اگر کسی صفحات دفتری رو ببره یا خطوطش رو پاک کنه، راهی هست که بشه دست‌خط قبلی رو خوند؟»',
+        nextNodeId: 'sadiq_ink_erasure',
+      },
+      {
+        id: 'opt_sadiq_tools',
+        text: '«به ابزاری احتیاج دارم که بتونم شیارهای فرورفته این کاغذ ضخیم رو بدون صدمه زدن آشکار کنم.»',
+        nextNodeId: 'sadiq_charcoal_technique',
+      },
+      {
+        id: 'opt_sadiq_purple_woman',
+        text: '«کسی در این یکی دو روز سراغ جنس کاغذ یا دفترچه میرزا نیومده بود؟»',
+        nextNodeId: 'sadiq_rana_mention',
+      },
+      {
+        id: 'opt_sadiq_leave',
+        text: 'دستت درد نکنه اوستا، برمی‌گردم.',
+        nextNodeId: undefined,
+      }
+    ]
+  },
+  sadiq_mirza_paper: {
+    id: 'sadiq_mirza_paper',
+    speaker: 'اوستا صادق',
+    speakerTitle: 'کاغذفروش و صحاف',
+    portraitKey: 'sadiq',
+    text: 'عجب کاغذی! این کاغذ آهارمهره درجه‌یک اصفهان است خان. پنبه فشرده با لعاب کتیرا و نشاسته. وقتی میرزا صفدر با آن قلم‌نی محکم دزفولی‌اش روی این می‌نوشت، تیغه قلم تا سه لایه زیرین را گود می‌انداخت! این جنس کاغذ، حافظه‌ای مثل سنگ دارد.',
+    options: [
+      {
+        id: 'opt_sadiq_back_to_root',
+        text: '«پس حتی اگه جوهرش نباشه، رد تیغه قلم پاک‌شدنی نیست!»',
+        nextNodeId: 'sadiq_root',
+      }
+    ]
+  },
+  sadiq_ink_erasure: {
+    id: 'sadiq_ink_erasure',
+    speaker: 'اوستا صادق',
+    speakerTitle: 'کاغذفروش و صحاف',
+    portraitKey: 'sadiq',
+    text: 'جوهر دوده را با چرم نمدار می‌شویند یا با تیغ دباغی می‌تراشند، اما شیار فرورفته قلم روی کاغذ آهارمهره تسلیم نمی‌شود. نادان‌ها فکر می‌کنند با تیغ زدن صفحه را نابود کرده‌اند، اما صفحه زیرین تمام کلمات را با برجستگی معکوس در خود ضبط کرده است!',
+    options: [
+      {
+        id: 'opt_sadiq_ask_method',
+        text: '«چطور میشه اون خطوط معکوس رو بدون پاره شدن کاغذ بیرون کشید؟»',
+        nextNodeId: 'sadiq_charcoal_technique',
+      }
+    ]
+  },
+  sadiq_charcoal_technique: {
+    id: 'sadiq_charcoal_technique',
+    speaker: 'اوستا صادق',
+    speakerTitle: 'کاغذفروش و صحاف',
+    portraitKey: 'sadiq',
+    text: 'اگر زغال درشت بکشی، کاغذ خراش برمی‌دارد و سیاه می‌شود. اما اگر «گرد نرم دوده بید» را با «قلم‌موی موی شتر» آرام و با زاویه مورب روی برگه نوازش دهی، دوده فقط در لبه‌های برجسته شیار می‌نشیند و کلمات مثل نگین فیروزه روی سنگ سیاه می‌درخشند!',
+    options: [
+      {
+        id: 'opt_sadiq_give_me_tools',
+        text: '«اوستا، اون سینی گرد دوده و قلم‌مو رو به من امانت بده تا حقیقت این دفتر برملا بشه.»',
+        nextNodeId: 'sadiq_give_tools',
+      }
+    ]
+  },
+  sadiq_give_tools: {
+    id: 'sadiq_give_tools',
+    speaker: 'اوستا صادق',
+    speakerTitle: 'کاغذفروش و صحاف',
+    portraitKey: 'sadiq',
+    text: 'مال خودت خان! برای رسوا کردن خائن‌ها، تمام دکان من پیشکش توست. آن سینی گرد دوده بید و قلم‌موی موی شتر روی طاقچه است، بردار و نگذار خون میرزا پایمال شود.',
+    options: [
+      {
+        id: 'opt_sadiq_tools_taken',
+        text: '«خیلی مردی اوستا صادق. میرم سراغ دفتر میرزا.»',
+        action: (s) => {
+          const inv = [...s.inventory];
+          if (!inv.includes('charcoal_powder_sadiq') && !inv.includes('shading_kit')) inv.push('charcoal_powder_sadiq');
+          if (!inv.includes('camel_hair_brush') && !inv.includes('shading_kit')) inv.push('camel_hair_brush');
+          return { inventory: inv };
+        },
+        nextNodeId: 'sadiq_root',
+      }
+    ]
+  },
+  sadiq_rana_mention: {
+    id: 'sadiq_rana_mention',
+    speaker: 'اوستا صادق',
+    speakerTitle: 'کاغذفروش و صحاف',
+    portraitKey: 'sadiq',
+    text: 'اتفاقاً سحرگاه امروز، قبل از باز شدن کاروانسرا، زنی با چادر زربفت بنفش و بوی عطر کندر و صندل به دکانم آمد. می‌پرسید آیا میرزا در این چند روز کاغذی برای صحافی پیش من گذاشته یا نه. چشمانی بسیار نافذ و وحشتناک داشت... مثل شاهین شکاری!',
+    options: [
+      {
+        id: 'opt_sadiq_rana_reply',
+        text: '«رعنا... پس اونم دنبال باقیمانده یادداشت‌های میرزا بوده!»',
+        nextNodeId: 'sadiq_root',
+      }
+    ]
+  },
+
+  // ========================================================
+  // ACT 2 DIALOGUES: MAHBANOO (مه‌بانو رنگرز)
+  // ========================================================
+  mahbanoo_root: {
+    id: 'mahbanoo_root',
+    speaker: 'مه‌بانو',
+    speakerTitle: 'رنگرز و قالی‌باف بازارچه',
+    portraitKey: 'mahbanoo',
+    text: 'سلام خانخله. دست‌های من بوی روناس میده، بوی خاک و زحمت. ولی چشم‌هام هنوز اون‌قدر سو داره که غریبه‌ها و بارهای مشکوک رو توی تاریکی بشناسم.',
+    options: [
+      {
+        id: 'opt_mahbanoo_red_wool',
+        text: '«مه‌بانو، این تکه نخ و نمد سرخ رو ببین؛ این رنگ هنر دست خودته؟»',
+        nextNodeId: 'mahbanoo_red_wool',
+      },
+      {
+        id: 'opt_mahbanoo_midnight',
+        text: '«دیشب از سمت راسته بازار و کوچه خانه یعقوب چیزی دیدی که خوابت رو آشفته کنه؟»',
+        nextNodeId: 'mahbanoo_midnight_sighting',
+      },
+      {
+        id: 'opt_mahbanoo_cart',
+        text: '«یعقوب میگه بیست تا شتر با زنگوله از کوچه‌ش رد شدن... تو شتری دیدی؟»',
+        nextNodeId: 'mahbanoo_suspicious_cart',
+      },
+      {
+        id: 'opt_mahbanoo_leave',
+        text: 'خسته نباشی مه‌بانو، به کارت برس.',
+        nextNodeId: undefined,
+      }
+    ]
+  },
+  mahbanoo_red_wool: {
+    id: 'mahbanoo_red_wool',
+    speaker: 'مه‌بانو',
+    speakerTitle: 'رنگرز و قالی‌باف بازارچه',
+    portraitKey: 'mahbanoo',
+    text: 'این سرخی اناری روناس یزد است با زاج سپید. سه روز پیش حاج مرتضی شال‌فروش آمد و هفت طاقه نمد ضخیم را با همین رنگ از من خرید. می‌گفت برای روکش صندوق‌های خزانه‌داری می‌خواهد تا رطوبت باران به مال تجارتی آسیب نزند. پولش را هم با سکه‌های کهنه پرداخت کرد.',
+    options: [
+      {
+        id: 'opt_mahbanoo_back_wool',
+        text: '«پس حاج مرتضی نمد صندوق‌ها رو تهیه کرده بود...»',
+        nextNodeId: 'mahbanoo_root',
+      }
+    ]
+  },
+  mahbanoo_midnight_sighting: {
+    id: 'mahbanoo_midnight_sighting',
+    speaker: 'مه‌بانو',
+    speakerTitle: 'رنگرز و قالی‌باف بازارچه',
+    portraitKey: 'mahbanoo',
+    text: 'دیشب نزدیک‌های نیمه‌شب، کلاف‌های رنگی را روی پشت‌بام پهن می‌کردم. دو مرد قوی‌هیکل با کلاه‌نمدی‌های سیاه دیدم که یک گاری دستی چوبی را به سمت کوچه بن‌بست یعقوب هل می‌دادند. رویش پارچه سیاه کشیده بودند، ولی زیر نور مهتاب دیدم که جعبه‌ها چقدر سبک به نظر می‌رسیدند!',
+    options: [
+      {
+        id: 'opt_mahbanoo_light_boxes',
+        text: '«سبک؟! مگه نباید بار صندوق‌ها شمش و شتربار باشه؟»',
+        nextNodeId: 'mahbanoo_suspicious_cart',
+      }
+    ]
+  },
+  mahbanoo_suspicious_cart: {
+    id: 'mahbanoo_suspicious_cart',
+    speaker: 'مه‌بانو',
+    speakerTitle: 'رنگرز و قالی‌باف بازارچه',
+    portraitKey: 'mahbanoo',
+    text: 'شتر کجا بود خان؟! یک دانه شتر هم از آن کوچه رد نشد! نه بوی سرگین شتر آمد، نه صدای زنگوله سنگین کاروان. فقط یکی از آن دو مرد، چیزی شبیه زنگوله حلبی را در دستش گرفته بود و هر چند قدم تکان می‌داد! آن پیرمرد نابینا را فریب دادند تا خیال کند کاروان عبور کرده است.',
+    options: [
+      {
+        id: 'opt_mahbanoo_go_yaqub',
+        text: '«یعقوب مظلوم... باید برم سراغش و این حیله رو بهش ثابت کنم.»',
+        nextNodeId: 'mahbanoo_root',
+      }
+    ]
+  },
+
+  // ========================================================
+  // ACT 2 DIALOGUES: YAQUB (یعقوب نابینا)
+  // ========================================================
+  yaqub_root: {
+    id: 'yaqub_root',
+    speaker: 'یعقوب نابینا',
+    speakerTitle: 'پیرمرد روشن‌دل و حافظ اصوات',
+    portraitKey: 'yaqub',
+    text: 'صدای پای گیوه کهنه... قدم‌های سنگین ولی بی‌شتاب... رفعت‌خان خانخله هستی، درسته؟ چشم‌هایم چهل سال است خاموشند، ولی گوش‌هایم دروغ نمی‌گویند. بگو برای چه به کلبه خشت و گلی من آمدی؟',
+    options: [
+      {
+        id: 'opt_yaqub_sounds',
+        text: '«عمو یعقوب، دیشب از صدای کوچه و بیابان چی شنیدی؟ موبه‌مو برام بگو.»',
+        nextNodeId: 'yaqub_hearing_sounds',
+      },
+      {
+        id: 'opt_yaqub_caravan',
+        text: '«گفتی کاروان بیست شتر از پشت دیوارت به طرف قنات رد شدند؟ از کجا این‌قدر مطمئنی؟»',
+        nextNodeId: 'yaqub_caravan_memory',
+      },
+      {
+        id: 'opt_yaqub_test_bell',
+        text: '«یعقوب! به این صدا خوب گوش بده... این زنگوله رو از بوته‌های پای دیوارت پیدا کردم.» (آزمون صوتی)',
+        condition: (s) => s.inventory.includes('iron_clapper_bell') || !!s.puzzleFlags.yaqub_sound_puzzle_solved,
+        nextNodeId: 'yaqub_audio_test',
+      },
+      {
+        id: 'opt_yaqub_woman_dawn',
+        text: '«قبل از سحر کسی به درِ کلبه‌ات نزد؟ بوی عطر غریبه‌ای به مشامت نخورد؟»',
+        condition: (s) => !!s.puzzleFlags.yaqub_sound_puzzle_solved,
+        nextNodeId: 'yaqub_confess_woman',
+      },
+      {
+        id: 'opt_yaqub_leave',
+        text: 'آسوده باش یعقوب، مزاحمت نمی‌شم.',
+        nextNodeId: undefined,
+      }
+    ]
+  },
+  yaqub_hearing_sounds: {
+    id: 'yaqub_hearing_sounds',
+    speaker: 'یعقوب نابینا',
+    speakerTitle: 'پیرمرد روشن‌دل و حافظ اصوات',
+    portraitKey: 'yaqub',
+    text: 'باد که از ریگستان وزید، صدای شکستن شاخه انار حیاط آمد. بعد، صدای زنگوله‌ها بلند شد... جرنگ... تق... تق... مثل حرکت آرام قافله در ریگ. بعد هم سکوتی غریب، و صدای پژواک هوای سرد از دهانه قنات.',
+    options: [
+      {
+        id: 'opt_yaqub_ask_clapper',
+        text: '«گفتی تق... تق...؟ مگه زنگ کاروان برنجی و کشیده نیست؟»',
+        nextNodeId: 'yaqub_caravan_memory',
+      }
+    ]
+  },
+  yaqub_caravan_memory: {
+    id: 'yaqub_caravan_memory',
+    speaker: 'یعقوب نابینا',
+    speakerTitle: 'پیرمرد روشن‌دل و حافظ اصوات',
+    portraitKey: 'yaqub',
+    text: 'من در جوانی ساربان بودم خان! صدای زنگ شتر را از فرسنگ‌ها می‌شناسم. زنگ کاروان سرخ همیشه هفت پرده زنگ می‌زند. دیشب هم صدای زنگ آمد... ولی... حالا که می‌پرسی، انگار طنین نداشت! انگار زنگوله در هوا معلق بود و صدای پای شترها در خاک گم شده بود!',
+    options: [
+      {
+        id: 'opt_yaqub_back_root',
+        text: '«چون خاکی که شتر روش پا بذاره فرومی‌ریزه، ولی ریگ‌های کوچه دست‌نخورده موندن!»',
+        nextNodeId: 'yaqub_root',
+      }
+    ]
+  },
+  yaqub_audio_test: {
+    id: 'yaqub_audio_test',
+    speaker: 'یعقوب نابینا',
+    speakerTitle: 'پیرمرد روشن‌دل و حافظ اصوات',
+    portraitKey: 'yaqub',
+    text: '(خانخله زنگوله حلبی لق را می‌نوازد: تق‌تق... تق‌تق...) یا رب العالمین! این... این صدای همان زنگوله‌ای است که دیشب شنیدم! زنگوله‌ای تک و تنها با زبانه آهنی کج! پس کاروان شتران کجا بود؟! چرا هیچ صدای نفسی از حیوان‌ها نیامد؟! خدایا، چهل سال به گوش‌هایم مغرور بودم، و دیشب فریب یک تکه آهن لق را خوردم!',
+    options: [
+      {
+        id: 'opt_yaqub_comfort',
+        text: '«تو مقصر نیستی عمو یعقوب؛ اونا برای فریب دادن همه این نقشه رو کشیده بودن. بگو بعدش چی شد؟»',
+        action: (s) => ({
+          puzzleFlags: { ...s.puzzleFlags, yaqub_sound_puzzle_solved: true },
+          evidence: { ...s.evidence, ev_act2_iron_clapper_sound: true }
+        }),
+        nextNodeId: 'yaqub_confess_woman',
+      }
+    ]
+  },
+  yaqub_confess_woman: {
+    id: 'yaqub_confess_woman',
+    speaker: 'یعقوب نابینا',
+    speakerTitle: 'پیرمرد روشن‌دل و حافظ اصوات',
+    portraitKey: 'yaqub',
+    text: 'ساعتی قبل از اذان صبح، درِ چوبی حیاط به صدا درآمد. صدای پای سبکی بود، مثل پای غزال روی مخمل. زنی بود با عطری تلخ و تند از عود و صندل. با صدایی محکم و مغرور گفت: «پیرمرد، میرزا دیشب اینجا نیامده بود؟ اگر سندی به تو سپرده بگو، تا کیسه زری در دامنت بریزم.» من گفتم جز باد و تنهایی کسی اینجا نیست. او با خشم رفت، اما صدای افتادن شیئی فلزی لای آجرچینی ورودی قنات به گوشم رسید!',
+    options: [
+      {
+        id: 'opt_yaqub_point_qanat',
+        text: '«افتادن شیء فلزی لای آجرچینی قنات! این باید همون نشانه گمشده باشه!»',
+        nextNodeId: 'yaqub_qanat_direction',
+      }
+    ]
+  },
+  yaqub_qanat_direction: {
+    id: 'yaqub_qanat_direction',
+    speaker: 'یعقوب نابینا',
+    speakerTitle: 'پیرمرد روشن‌دل و حافظ اصوات',
+    portraitKey: 'yaqub',
+    text: 'برو به دهانه قنات متروک خانخله. دست راستت روی آجر سوم بالاتر از طاقچه سنگی، لای درز ملات سست را بگرد. آن زن در تاریکی آنجا ایستاده بود. مراقب باش، خائن‌ها برای اینکه رازشان سر به مهر بماند از هیچ خونی پروا ندارند!',
+    options: [
+      {
+        id: 'opt_yaqub_final_thanks',
+        text: '«ممنونم عمو یعقوب. گوش‌های تو حقیقت رو زنده کرد.»',
         nextNodeId: undefined,
       }
     ]

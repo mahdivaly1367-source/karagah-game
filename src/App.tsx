@@ -17,7 +17,10 @@ import { GAME_ITEMS } from './data/items';
 import { GAME_EVIDENCE } from './data/evidence';
 import { DIALOGUE_NODES } from './data/dialogues';
 import { soundManager } from './systems/audio/soundManager';
-import { SaveManager, SaveSlotData } from './systems/save/saveManager';
+import { SaveManager, SaveSlotData, CURRENT_SAVE_VERSION } from './systems/save/saveManager';
+import { PuzzleEngine } from './systems/puzzle/puzzleEngine';
+import { ContradictionEngine } from './systems/deduction/contradictionEngine';
+import { InteractionEngine } from './systems/interaction/interactionEngine';
 
 // Components
 import { MainMenu } from './components/Menu/MainMenu';
@@ -26,6 +29,7 @@ import { SaveLoadModal } from './components/Menu/SaveLoadModal';
 import { IntroCinematic } from './components/GameCanvas/IntroCinematic';
 import { GameScene } from './components/GameCanvas/GameScene';
 import { OutroAct1 } from './components/GameCanvas/OutroAct1';
+import { OutroAct2 } from './components/GameCanvas/OutroAct2';
 import { DialogueBox } from './components/Dialogue/DialogueBox';
 import { InventoryBar } from './components/Inventory/InventoryBar';
 import { InspectModal } from './components/Inventory/InspectModal';
@@ -54,7 +58,7 @@ const INITIAL_GAME_STATE: GameState = {
   dialogueFlags: {},
   puzzleFlags: {},
   relationshipFlags: {},
-  saveVersion: 1,
+  saveVersion: CURRENT_SAVE_VERSION,
 
   // UI state
   isMenuOpen: true, // Start at main menu
@@ -164,11 +168,32 @@ export default function App() {
         }
       ];
 
-      const newState = {
+      let newState: GameState = {
         ...prev,
         evidence: updatedEvidence,
         journal: updatedJournal,
       };
+
+      // Check if discovered evidence triggers contradiction resolution against Khan's hasty bandit misjudgment
+      if (
+        (evidenceId === 'ev_red_thread_cloth' || evidenceId === 'ev_cold_tea') &&
+        newState.evidence['ev_red_thread_cloth'] &&
+        newState.evidence['ev_cold_tea'] &&
+        newState.storyFlags.khan_misjudgment_bandit_theory &&
+        !newState.storyFlags.khan_misjudgment_corrected
+      ) {
+        const contra = ContradictionEngine.resolveWithEvidence('contra_khan_bandit_theory', 'ev_red_thread_cloth', newState);
+        if (contra?.success && contra.newStateUpdates) {
+          newState = {
+            ...newState,
+            ...contra.newStateUpdates,
+          };
+          soundManager.playContradictionExposed();
+          setTimeout(() => {
+            showToast('استنتاج جدید خانخله: تئوری حمله راهزنان منتفی شد!');
+          }, 1000);
+        }
+      }
 
       showToast(customNotice || `سرنخ کشف شد: ${evidenceData.name}`);
       autoSave(newState);
@@ -242,60 +267,52 @@ export default function App() {
     }
   };
 
-  // Combine Items Handler
+  // Combine Items Handler (Delegated to PuzzleEngine)
   const handleCombineItems = useCallback((item1Id: string, item2Id: string) => {
     soundManager.playClick();
 
-    const isMatch = (idA: string, idB: string, targetA: string, targetB: string) => {
-      return (idA === targetA && idB === targetB) || (idA === targetB && idB === targetA);
-    };
+    const result = PuzzleEngine.combineItems(item1Id, item2Id, gameState);
 
-    // 1. Combine Red Thread + Torn Cloth
-    if (isMatch(item1Id, item2Id, 'red_thread', 'torn_cloth')) {
+    if (result.success && result.puzzle) {
       soundManager.playPuzzleSolved();
 
       setGameState(prev => {
-        const filteredInv = prev.inventory.filter(id => id !== 'red_thread' && id !== 'torn_cloth');
-        const updatedInv = [...filteredInv, 'cloth_with_thread'];
-        const updatedEvidence = { ...prev.evidence, ev_red_thread_cloth: true };
-        const updatedFlags = { ...prev.puzzleFlags, window_puzzle_solved: true };
-
-        const newState = {
+        let newState: GameState = {
           ...prev,
-          inventory: updatedInv,
           activeItemId: null,
-          evidence: updatedEvidence,
-          puzzleFlags: updatedFlags,
-          inspectModal: {
-            title: 'ترکیب موفقیت‌آمیز اشیاء!',
-            description: 'تکه پارچه و نخ قرمز ابریشمی با هم چفت شدند. لبه پاره پارچه دقیقاً تار و پود همان نخ ابریشمی را دارد.',
-            subtext: 'خانخله: «پس یا دیوار از پارچه خوشش میاد... یا یکی از همین‌جا رد شده.»',
+          ...(result.newStateUpdates || {}),
+        };
+
+        if (result.inspectModal) {
+          newState.inspectModal = result.inspectModal;
+        }
+
+        if (result.triggerScene) {
+          newState.currentScene = result.triggerScene;
+        }
+
+        if (result.toastMessage) {
+          showToast(result.toastMessage);
+        }
+
+        // Check if red thread + cloth was made -> trigger contradiction resolution if bandit theory was active
+        if (
+          result.puzzle!.id === 'puzzle_combine_cloth_thread' &&
+          newState.storyFlags.khan_misjudgment_bandit_theory &&
+          !newState.storyFlags.khan_misjudgment_corrected
+        ) {
+          const contraRes = ContradictionEngine.resolveWithEvidence('contra_khan_bandit_theory', 'ev_red_thread_cloth', newState);
+          if (contraRes?.success && contraRes.newStateUpdates) {
+            newState = {
+              ...newState,
+              ...contraRes.newStateUpdates,
+            };
+            soundManager.playContradictionExposed();
+            setTimeout(() => {
+              showToast('استنتاج جدید خانخله: تئوری راهزنان بیابانی رد شد!');
+            }, 1200);
           }
-        };
-
-        showToast('معما حل شد: اثبات گریز از پنجره با نخ قرمز!');
-        autoSave(newState);
-        return newState;
-      });
-      return;
-    }
-
-    // 2. Combine Charcoal Stick + Account Ledger
-    if (isMatch(item1Id, item2Id, 'charcoal_stick', 'account_ledger')) {
-      soundManager.playPuzzleSolved();
-
-      setGameState(prev => {
-        const filteredInv = prev.inventory.filter(id => id !== 'account_ledger');
-        const updatedInv = [...filteredInv, 'revealed_ledger'];
-        const updatedFlags = { ...prev.puzzleFlags, ledger_revealed: true };
-
-        const newState = {
-          ...prev,
-          inventory: updatedInv,
-          activeItemId: null,
-          puzzleFlags: updatedFlags,
-          currentScene: 'act1_outro', // Trigger the climax!
-        };
+        }
 
         autoSave(newState);
         return newState;
@@ -304,282 +321,75 @@ export default function App() {
     }
 
     // Invalid combination
-    showToast('این دو شیء به هم ربطی ندارند.');
+    showToast(result.toastMessage || 'این دو شیء به هم ربطی ندارند.');
     setGameState(prev => ({ ...prev, activeItemId: null }));
-  }, [showToast, autoSave]);
+  }, [gameState, showToast, autoSave]);
 
-  // Object Interaction Handler
+  // Object Interaction Handler (Delegated to PuzzleEngine & InteractionEngine)
   const handleInteractObject = useCallback((obj: InteractiveObject) => {
-    // If active item selected from inventory, try to use it on object
+    // 1. If active item selected from inventory, try to use it on object via PuzzleEngine
     if (gameState.activeItemId) {
-      const activeItem = GAME_ITEMS[gameState.activeItemId];
+      const puzzleResult = PuzzleEngine.useItemOnObject(gameState.activeItemId, obj.id, gameState);
+      if (puzzleResult.handled) {
+        if (puzzleResult.success) {
+          soundManager.playPuzzleSolved();
+          setGameState(prev => {
+            let newState: GameState = {
+              ...prev,
+              activeItemId: null,
+              ...(puzzleResult.newStateUpdates || {}),
+            };
 
-      // Window + cloth_with_thread or red_thread
-      if (obj.id === 'obj_window' && (gameState.activeItemId === 'cloth_with_thread' || gameState.activeItemId === 'red_thread')) {
-        soundManager.playPuzzleSolved();
-        setGameState(prev => ({
-          ...prev,
-          activeItemId: null,
-          puzzleFlags: { ...prev.puzzleFlags, window_puzzle_solved: true },
-          inspectModal: {
-            title: 'تطبیق سرنخ با لبه پنجره',
-            description: 'لبه پاره پارچه و نخ سرخ دقیقاً با میخ چهارچوب پنجره چفت می‌شود. جای پای بیرون پنجره هم نشان می‌دهد شخصی با شتاب به کوچه پشتی پریده است.',
-            subtext: 'خانخله: «پس یا دیوار از پارچه خوشش میاد... یا یکی از همینجا رد شده.»'
+            if (puzzleResult.inspectModal) {
+              newState.inspectModal = puzzleResult.inspectModal;
+            }
+
+            if (puzzleResult.triggerScene) {
+              newState.currentScene = puzzleResult.triggerScene;
+            }
+
+            if (puzzleResult.toastMessage) {
+              showToast(puzzleResult.toastMessage);
+            }
+
+            autoSave(newState);
+            return newState;
+          });
+          return;
+        } else {
+          // Failed attempt using item on this object
+          if (puzzleResult.toastMessage) {
+            showToast(puzzleResult.toastMessage);
           }
-        }));
-        return;
-      }
-
-      // Desk + charcoal on ledger
-      if ((obj.id === 'obj_desk' || obj.id === 'obj_account_ledger') && gameState.activeItemId === 'charcoal_stick') {
-        if (gameState.inventory.includes('account_ledger')) {
-          handleCombineItems('charcoal_stick', 'account_ledger');
+          setGameState(prev => ({ ...prev, activeItemId: null }));
           return;
         }
       }
     }
 
-    // Standard Interactions per object
-    switch (obj.id) {
-      // Outer Alley
-      case 'obj_tree_bed':
-        setGameState(prev => ({
+    // 2. Otherwise, delegate to InteractionEngine (data-driven object interactions)
+    const interactionResult = InteractionEngine.handleObject(obj, gameState, {
+      showToast,
+      changeScene,
+      discoverEvidence,
+      addItemToInventory,
+    });
+
+    if (interactionResult.stateUpdates) {
+      setGameState(prev => {
+        const nextState = {
           ...prev,
-          inspectModal: {
-            title: 'درخت کهنسال توت',
-            description: 'سایه‌ای خنک در حاشیه کوچه خاکی کاروانسرا. خانخله شب‌ها و صبح‌های زود روی پوستین نمدی زیر این درخت چرت می‌زند.',
-            subtext: 'خانخله: «خواب زیر درخت مفته، هوای کویر هم تا لنگ ظهر نسیم داره... کاش این کاظم زلزله بیدارم نمی‌کرد.»'
-          }
-        }));
-        break;
-
-      case 'obj_crow':
-        soundManager.playCrow();
-        setGameState(prev => ({
-          ...prev,
-          inspectModal: {
-            title: 'کلاغ دم‌سیاه',
-            description: 'کلاغ با چشم‌های براقش به دهان خانخله نگاه می‌کند و صدایی از ته گلو بیرون می‌دهد: «قار! قار!»',
-            subtext: 'خانخله: «حتی این کلاغ هم به شامه من حسودی می‌کنه! دنبال گوشت نباش حیوان، اینجا فقط بوی پول سوخته میاد.»'
-          }
-        }));
-        break;
-
-      case 'npc_kazem_alley':
-        soundManager.playClick();
-        setGameState(prev => ({
-          ...prev,
-          currentDialogue: {
-            npcId: 'kazem',
-            currentNodeId: 'kazem_root'
-          }
-        }));
-        break;
-
-      case 'door_to_courtyard':
-        changeScene('courtyard');
-        break;
-
-      case 'obj_desert_road':
-        setGameState(prev => ({
-          ...prev,
-          inspectModal: {
-            title: 'جاده ریگستان',
-            description: 'جاده‌ای خاکی که کاروان‌ها از آن به سوی ری و یزد حرکت می‌کنند. در افق باد گرد و خاک بلند کرده است.',
-            subtext: 'خانخله: «بیابان برای شترها و راهزن‌هاست، نه پای پیاده من. تا قضیه میرزا روشن نشه یه قدم تو این گرما برنمی‌دارم.»'
-          }
-        }));
-        break;
-
-      // Courtyard
-      case 'obj_mud_pool':
-        discoverEvidence('ev_morteza_boots', 'کشف شد: گل سرخ‌رنگ پای حوضچه با چکمه‌های حاج مرتضی همخوانی دارد!');
-        setGameState(prev => ({
-          ...prev,
-          inspectModal: {
-            title: 'گِل سرخ‌رنگ لای حوضچه',
-            description: 'آب حوضچه روی خاک رس قرمز مسافرخانه جاری شده و گِل چسبنده کم‌نظیری ساخته است. رد چکمه‌های نوک‌تیز ساغری بر آن حک شده است.',
-            subtext: 'خانخله: «این خاک فقط تو حیاط این کاروانسراست. هر کی دیشب پاش به اینجا خورده باشه، تا سه روز از چکمهاش پاک نمیشه!»'
-          }
-        }));
-        break;
-
-      case 'npc_nemat_courtyard':
-        soundManager.playClick();
-        setGameState(prev => ({
-          ...prev,
-          currentDialogue: {
-            npcId: 'nemat',
-            currentNodeId: 'nemat_root'
-          }
-        }));
-        break;
-
-      case 'door_to_mirza_room':
-        changeScene('mirza_room');
-        break;
-
-      case 'door_to_stable':
-        changeScene('stable');
-        break;
-
-      case 'door_to_alley':
-        changeScene('outer_alley');
-        break;
-
-      // Mirza's Room
-      case 'obj_wall_writing':
-        discoverEvidence('ev_fake_writing', 'سرنخ مشکوک: نوشته روی دیوار ساختگی است!');
-        setGameState(prev => ({
-          ...prev,
-          inspectModal: {
-            title: 'نوشته روی دیوار گلی',
-            description: 'با خطی شتاب‌زده با زغال حک شده: «حساب، خودش را پس میگیرد».',
-            subtext: 'خانخله: «میرزا حتی روی سیاهه نمک و فلفل قلم تعلیق می‌زد. این خط زمخت کار یه آدم کم‌سواد و دستپاچه‌ست که خواسته صحنه رو کینه‌توزانه جلوه بده.»'
-          }
-        }));
-        break;
-
-      case 'obj_window':
-        discoverEvidence('ev_window_dust', 'کشف شد: گرد و خاک لبه پنجره دستکاری شده!');
-        setGameState(prev => ({
-          ...prev,
-          inspectModal: {
-            title: 'پنجره چوبی رو به کوچه پشتی',
-            description: 'لبه گلی پنجره خراشیده شده و خاک روی آن به هم خورده است. لولای چوبی پنجره به زور باز شده است.',
-            subtext: 'خانخله: «پنجره رو نه نسیم باز کرده، نه مهتاب. یکی تنه‌اش رو داده به این چوب‌ها و پریده بیرون.»'
-          }
-        }));
-        break;
-
-      case 'obj_window_nail_thread':
-        addItemToInventory('red_thread', 'نخ قرمز ابریشمی از روی میخ پنجره برداشته شد.');
-        break;
-
-      case 'obj_desk':
-        setGameState(prev => ({
-          ...prev,
-          inspectModal: {
-            title: 'میز کار میرزا صفدر',
-            description: 'میز کوتاه چوبی پر از دوات خشکیده، قلم‌نی‌های شکسته و ورق‌های پراکنده. فنجان چای دست‌نخورده و دفتر قطوری روی آن به چشم می‌خورد.',
-            subtext: 'خانخله: «میرزا آدم نظیفی بود... معلومه قبل از رفتن یا بردنش، وقت جمع کردن خرت و پرت‌هاش رو نداشته.»'
-          }
-        }));
-        break;
-
-      case 'obj_tea_cup':
-        discoverEvidence('ev_cold_tea', 'کشف شد: فنجان چای دست‌نخورده و سرد است!');
-        setGameState(prev => ({
-          ...prev,
-          inspectModal: {
-            title: 'فنجان چای سرد',
-            description: 'استکان تا لبه پر از چای کهنه و سیاه است، اما نعلبکی خشک است و لب به آن نزده‌اند.',
-            subtext: 'خانخله: «میرزا حتی وقت نکرده قند رو تو استکان بندازه. ماجرا اونقدری ناگهانی بوده که چای گرمش یخ زده.»'
-          }
-        }));
-        break;
-
-      case 'obj_account_ledger':
-        addItemToInventory('account_ledger', 'دفتر حساب میرزا صفدر برداشته شد.');
-        break;
-
-      case 'obj_holed_coin':
-        addItemToInventory('coin_hole', 'سکه سوراخ‌شده از زیر تخته‌های میز برداشته شد.');
-        discoverEvidence('ev_holed_coin', 'کشف شد: سکه سوراخ‌شده با نشان کاروان شتران سرخ!');
-        break;
-
-      case 'obj_bed':
-        setGameState(prev => ({
-          ...prev,
-          inspectModal: {
-            title: 'تخت خواب میرزا',
-            description: 'لحاف کرباسی پس زده شده و متکا کج شده است. نشانی از خون یا درگیری مرگبار دیده نمی‌شود.',
-            subtext: 'خانخله: «خونی در کار نبوده. یا با پای خودش رفته، یا با شمشیر زیر گلوش بدرقه‌ش کردن.»'
-          }
-        }));
-        break;
-
-      case 'obj_chest':
-        if (!gameState.inventory.includes('torn_cloth') && !gameState.inventory.includes('cloth_with_thread')) {
-          addItemToInventory('torn_cloth', 'تکه پارچه پاره‌شده از گوشه صندوق برداشته شد.');
-        } else {
-          setGameState(prev => ({
-            ...prev,
-            inspectModal: {
-              title: 'صندوقچه چوبی میرزا',
-              description: 'صندوق خالی است و تمام لباس‌های اضافی و وسایل باارزش جابه‌جا شده است.',
-              subtext: 'خانخله: «چیز دندون‌گیری تو این صندوق نمونده جز خاک بیابون.»'
-            }
-          }));
-        }
-        break;
-
-      case 'obj_hearth_charcoal':
-        addItemToInventory('charcoal_stick', 'تکه زغال نیم‌سوز از اجاق برداشته شد.');
-        break;
-
-      case 'door_back_to_courtyard':
-        changeScene('courtyard');
-        break;
-
-      // Stable
-      case 'npc_morteza_stable':
-        soundManager.playClick();
-        setGameState(prev => ({
-          ...prev,
-          currentDialogue: {
-            npcId: 'morteza',
-            currentNodeId: 'morteza_root'
-          }
-        }));
-        break;
-
-      case 'obj_morteza_boots':
-        discoverEvidence('ev_morteza_boots', 'کشف شد: تناقض چکمه‌های گل‌آلود حاج مرتضی!');
-        setGameState(prev => ({
-          ...prev,
-          inspectModal: {
-            title: 'چکمه‌های گران‌قیمت حاج مرتضی',
-            description: 'پای چکمه‌های چرم ساغری با خاک رس سرخ و خشکیده مسافرخانه پوشیده شده است. در حالی که او ادعا می‌کند دیشب فرسنگ‌ها دورتر در ده بالا بوده است!',
-            subtext: 'خانخله: «پای حاج‌آقا توی گِل حیاط گیر کرده، ولی زبونش از زهد و ده بالا می‌گه. این چکمه مدرک زنده دروغشه!»'
-          }
-        }));
-        break;
-
-      case 'obj_horses':
-        setGameState(prev => ({
-          ...prev,
-          inspectModal: {
-            title: 'اسب‌ها و قاطرهای بارکش',
-            description: 'قاطرهای قوی‌هیکل با زین‌های خاکی که به تیرک بسته شده‌اند و از توبره کاه می‌خورند.',
-            subtext: 'خانخله: «حیوان زبون‌بسته لااقل سرش به یونجه خودشه، نه مثل آدم‌ها به مال غارت‌شده مردم.»'
-          }
-        }));
-        break;
-
-      case 'obj_leather_harness':
-        setGameState(prev => ({
-          ...prev,
-          inspectModal: {
-            title: 'یراق‌آلات و زین چرمی',
-            description: 'تسمه‌ها و دهنه‌های چرمی روغنی که از سقف آویزان شده‌اند.',
-            subtext: 'خانخله: «چرم خوبیه، ولی به درد حل معمای ما نمی‌خوره.»'
-          }
-        }));
-        break;
-
-      case 'door_stable_to_courtyard':
-        changeScene('courtyard');
-        break;
-
-      default:
-        showToast(obj.name);
+          ...interactionResult.stateUpdates,
+        };
+        autoSave(nextState);
+        return nextState;
+      });
     }
-  }, [gameState, discoverEvidence, addItemToInventory, changeScene, showToast, handleCombineItems]);
+  }, [gameState, showToast, changeScene, discoverEvidence, addItemToInventory, autoSave]);
 
   // Handle Inspecting Item from Inventory
   const handleInspectInventoryItem = (item: Item) => {
-    // If inspecting ledger, provide charcoal action if charcoal in inventory!
+    // Act 1: If inspecting ledger, provide charcoal action if charcoal in inventory!
     if (item.id === 'account_ledger' && gameState.inventory.includes('charcoal_stick')) {
       setGameState(prev => ({
         ...prev,
@@ -590,6 +400,74 @@ export default function App() {
           actionLabel: 'مالیدن گرد زغال روی صفحات سفید (آشکارسازی خطوط فرورفته)',
           onAction: () => {
             handleCombineItems('charcoal_stick', 'account_ledger');
+          }
+        }
+      }));
+      return;
+    }
+
+    // Act 2: If inspecting raw Act 2 ledger, provide shading kit action if in inventory
+    if (item.id === 'ledger_act2_raw' && gameState.inventory.includes('shading_kit')) {
+      setGameState(prev => ({
+        ...prev,
+        inspectModal: {
+          title: item.name,
+          description: item.description,
+          subtext: item.inspectText,
+          actionLabel: 'سایه‌زدن با کیت دوده بید و قلم‌موی موی شتر بر شیارهای سفید',
+          onAction: () => {
+            handleCombineItems('shading_kit', 'ledger_act2_raw');
+          }
+        }
+      }));
+      return;
+    }
+
+    // Act 2: If inspecting charcoal powder and has camel hair brush, offer craft shading kit
+    if (item.id === 'charcoal_powder_sadiq' && gameState.inventory.includes('camel_hair_brush')) {
+      setGameState(prev => ({
+        ...prev,
+        inspectModal: {
+          title: item.name,
+          description: item.description,
+          subtext: item.inspectText,
+          actionLabel: 'ترکیب با قلم‌موی موی شتر (ساخت کیت تخصصی سایه‌زنی)',
+          onAction: () => {
+            handleCombineItems('charcoal_powder_sadiq', 'camel_hair_brush');
+          }
+        }
+      }));
+      return;
+    }
+
+    // Act 2: If inspecting fake iron clapper bell, allow testing sound
+    if (item.id === 'iron_clapper_bell') {
+      setGameState(prev => ({
+        ...prev,
+        inspectModal: {
+          title: item.name,
+          description: item.description,
+          subtext: item.inspectText,
+          actionLabel: 'تکان دادن زنگوله و شنیدن صدای خشک آهن لق (پازل صوتی)',
+          onAction: () => {
+            soundManager.playFakeClapper();
+          }
+        }
+      }));
+      return;
+    }
+
+    // Act 2: If inspecting authentic camel bell, allow testing sound
+    if (item.id === 'authentic_camel_bell') {
+      setGameState(prev => ({
+        ...prev,
+        inspectModal: {
+          title: item.name,
+          description: item.description,
+          subtext: item.inspectText,
+          actionLabel: 'نواختن زنگوله برنجی و شنیدن طنین اصیل کاروان (پازل صوتی)',
+          onAction: () => {
+            soundManager.playAuthenticBell();
           }
         }
       }));
@@ -662,8 +540,17 @@ export default function App() {
           }}
         />
       ) : gameState.currentScene === 'act1_outro' ? (
-        /* 3. Outro Climax */
+        /* 3. Outro Climax Act 1 */
         <OutroAct1
+          onStartAct2={() => {
+            soundManager.playDoorCreak();
+            setGameState(prev => ({
+              ...prev,
+              currentScene: 'mirza_room_act2',
+              act: 2,
+              storyFlags: { ...prev.storyFlags, act2_started: true },
+            }));
+          }}
           onRestart={() => {
             setGameState(prev => ({
               ...prev,
@@ -672,6 +559,19 @@ export default function App() {
           }}
           onReturnToMenu={() => {
             setGameState(prev => ({ ...prev, isMenuOpen: true }));
+          }}
+        />
+      ) : gameState.currentScene === 'act2_outro' ? (
+        /* 4. Outro Climax Act 2 */
+        <OutroAct2
+          onReturnToMenu={() => {
+            setGameState(prev => ({ ...prev, isMenuOpen: true }));
+          }}
+          onExplore={() => {
+            setGameState(prev => ({
+              ...prev,
+              currentScene: 'bazaar',
+            }));
           }}
         />
       ) : (

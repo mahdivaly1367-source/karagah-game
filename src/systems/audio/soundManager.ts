@@ -180,6 +180,44 @@ class SoundManager {
     }
   }
 
+  // Play contradiction exposed sting (tense minor dissonant-to-consonant chord)
+  public playContradictionExposed() {
+    try {
+      this.initContext();
+      if (!this.ctx || !this.sfxGain) return;
+      const now = this.ctx.currentTime;
+      
+      // Low strike
+      const lowOsc = this.ctx.createOscillator();
+      const lowGain = this.ctx.createGain();
+      lowOsc.type = 'sawtooth';
+      lowOsc.frequency.setValueAtTime(130, now);
+      lowOsc.frequency.exponentialRampToValueAtTime(65, now + 0.4);
+      lowGain.gain.setValueAtTime(0.2, now);
+      lowGain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+      lowOsc.connect(lowGain);
+      lowGain.connect(this.sfxGain);
+      lowOsc.start(now);
+      lowOsc.stop(now + 0.5);
+
+      // Mystery clash resolving to truth
+      [440, 466.16, 659.25].forEach((freq) => {
+        const osc = this.ctx!.createOscillator();
+        const gain = this.ctx!.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + 0.08);
+        gain.gain.setValueAtTime(0.15, now + 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+        osc.connect(gain);
+        gain.connect(this.sfxGain!);
+        osc.start(now + 0.08);
+        osc.stop(now + 0.8);
+      });
+    } catch {
+      // Ignore
+    }
+  }
+
   // Play door open / creak
   public playDoorCreak() {
     try {
@@ -233,7 +271,7 @@ class SoundManager {
     }
   }
 
-  // Play crow caw
+  // Play Crow Caw
   public playCrow() {
     try {
       this.initContext();
@@ -255,6 +293,62 @@ class SoundManager {
         
         osc.start(now + offset);
         osc.stop(now + offset + 0.22);
+      });
+    } catch {
+      // Ignore
+    }
+  }
+
+  // Act 2 Audio Puzzle: Authentic resonant brass caravan bell
+  public playAuthenticBell() {
+    try {
+      this.initContext();
+      if (!this.ctx || !this.sfxGain) return;
+      const now = this.ctx.currentTime;
+      const harmonics = [329.63, 659.25, 987.77, 1318.5]; // E major harmonic series
+      
+      harmonics.forEach((freq, idx) => {
+        const osc = this.ctx!.createOscillator();
+        const gain = this.ctx!.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now);
+        
+        const amp = 0.15 / (idx + 1);
+        gain.gain.setValueAtTime(amp, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 3.8);
+        
+        osc.connect(gain);
+        gain.connect(this.sfxGain!);
+        osc.start(now);
+        osc.stop(now + 3.8);
+      });
+    } catch {
+      // Ignore
+    }
+  }
+
+  // Act 2 Audio Puzzle: Fake rattling iron clapper bell
+  public playFakeClapper() {
+    try {
+      this.initContext();
+      if (!this.ctx || !this.sfxGain) return;
+      const now = this.ctx.currentTime;
+
+      // Rattling tin strike
+      [0, 0.06, 0.13].forEach((offset) => {
+        const osc = this.ctx!.createOscillator();
+        const gain = this.ctx!.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(210 + Math.random() * 40, now + offset);
+        osc.frequency.exponentialRampToValueAtTime(110, now + offset + 0.15);
+        
+        gain.gain.setValueAtTime(0.12, now + offset);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.16);
+        
+        osc.connect(gain);
+        gain.connect(this.sfxGain!);
+        osc.start(now + offset);
+        osc.stop(now + offset + 0.16);
       });
     } catch {
       // Ignore
