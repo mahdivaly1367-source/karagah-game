@@ -1,0 +1,6 @@
+{
+  "name": "خان‌خله: سایه بر کاروان",
+  "description": "بازی ماجراجویی کارآگاهی تاریخی در بستر ایران قدیم - خان‌خله: سایه بر کاروان",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
