@@ -627,7 +627,7 @@ export const DIALOGUE_NODES: Record<string, DialogueNode> = {
       {
         id: 'opt_qasem_confront',
         text: '«قاسم! پلاک مسین ضرابخانه و دروغ کاروان شتران رو به کی فروختی؟ کی بهت پول داد این اراجیف رو سر هم کنی؟»',
-        condition: (s) => !!s.evidence.ev_act2_copper_token_cipher || !!s.puzzleFlags.empty_ledger_act2_solved,
+        condition: (s) => !!s.evidence.ev_act2_copper_token_cipher || !!s.puzzleFlags.empty_ledger_act2_solved || !!s.storyFlags.qasem_hoax_exposed,
         nextNodeId: 'qasem_confront_hoax',
       },
       {
@@ -953,7 +953,7 @@ export const DIALOGUE_NODES: Record<string, DialogueNode> = {
       {
         id: 'opt_yaqub_woman_dawn',
         text: '«قبل از سحر کسی به درِ کلبه‌ات نزد؟ بوی عطر غریبه‌ای به مشامت نخورد؟»',
-        condition: (s) => !!s.puzzleFlags.yaqub_sound_puzzle_solved,
+        condition: (s) => !!s.puzzleFlags.yaqub_sound_puzzle_solved || !!s.storyFlags.yaqub_sound_puzzle_solved || !!s.storyFlags.yaqub_contradiction_exposed,
         nextNodeId: 'yaqub_confess_woman',
       },
       {

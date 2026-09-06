@@ -490,10 +490,26 @@ export default function App() {
     const contra = GAME_CONTRADICTIONS[contradictionId];
     if (!contra) return;
 
+    // 1. Guard against Double Resolution (Idempotent)
+    if (contra.isResolved(gameState)) {
+      showToast('این تناقض قبلاً اثبات و ثبت شده است.');
+      return;
+    }
+
+    // 2. Guard against Premature Resolution
+    if (!contra.isAvailable(gameState)) {
+      showToast('هنوز تمام شواهد و سرنخ‌های لازم برای رد این ادعا به دست نیامده است.');
+      return;
+    }
+
     soundManager.playContradictionExposed();
 
     setGameState(prev => {
-      const updatedJournal = contra.resolution.journalEntry
+      // 3. Deduplicate journal entries
+      const alreadyInJournal = contra.resolution.journalEntry && prev.journal.some(
+        j => typeof j === 'object' && j.id === contra.resolution.journalEntry?.id
+      );
+      const updatedJournal = contra.resolution.journalEntry && !alreadyInJournal
         ? [...prev.journal, contra.resolution.journalEntry]
         : prev.journal;
 

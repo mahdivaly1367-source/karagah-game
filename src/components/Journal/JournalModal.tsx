@@ -406,18 +406,17 @@ export const JournalModal: React.FC<JournalModalProps> = ({ gameState, onClose, 
                         )}
                       </div>
                     ) : isAvailable ? (
-                      <div className="flex items-center justify-between pt-1">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-1">
                         <span className="text-xs text-[#ffc080]">
                           تمام سرنخ‌های لازم برای رد این ادعا در دست است!
                         </span>
                         <button
                           onClick={() => {
                             if (onResolveContradiction) {
-                              soundManager.playContradictionExposed();
                               onResolveContradiction(contra.id);
                             }
                           }}
-                          className="px-4 py-2 bg-gradient-to-l from-amber-700 to-amber-600 hover:from-amber-600 hover:to-amber-500 text-[#fff7ed] font-bold text-xs rounded-lg border border-amber-400 shadow-md transition-all active:scale-95"
+                          className="min-h-[44px] px-4 py-2 bg-gradient-to-l from-amber-700 to-amber-600 hover:from-amber-600 hover:to-amber-500 text-[#fff7ed] font-bold text-xs rounded-lg border border-amber-400 shadow-md transition-all active:scale-95 flex items-center justify-center shrink-0"
                         >
                           مواجهه و اثبات تناقض
                         </button>
