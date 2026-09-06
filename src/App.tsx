@@ -15,6 +15,7 @@ import {
 import { SCENES } from './data/scenes';
 import { GAME_ITEMS } from './data/items';
 import { GAME_EVIDENCE } from './data/evidence';
+import { GAME_CONTRADICTIONS } from './data/contradictions';
 import { DIALOGUE_NODES } from './data/dialogues';
 import { soundManager } from './systems/audio/soundManager';
 import { SaveManager, SaveSlotData, CURRENT_SAVE_VERSION } from './systems/save/saveManager';
@@ -484,6 +485,69 @@ export default function App() {
     }));
   };
 
+  // Handle Resolving Contradiction from Journal/Deduction
+  const handleResolveContradiction = (contradictionId: string) => {
+    const contra = GAME_CONTRADICTIONS[contradictionId];
+    if (!contra) return;
+
+    soundManager.playContradictionExposed();
+
+    setGameState(prev => {
+      const updatedJournal = contra.resolution.journalEntry
+        ? [...prev.journal, contra.resolution.journalEntry]
+        : prev.journal;
+
+      const updatedStoryFlags = {
+        ...prev.storyFlags,
+        ...contra.resolution.flagsToSet,
+      };
+
+      const updatedDialogueFlags = {
+        ...prev.dialogueFlags,
+        ...contra.resolution.flagsToSet,
+      };
+
+      const updatedPuzzleFlags = {
+        ...prev.puzzleFlags,
+        ...contra.resolution.flagsToSet,
+      };
+
+      const updatedEvidence = { ...prev.evidence };
+      if (contra.resolution.unlockedEvidenceId) {
+        updatedEvidence[contra.resolution.unlockedEvidenceId] = true;
+      }
+
+      const updatedRelationships = { ...prev.relationshipFlags };
+      if (contra.resolution.relationshipDelta) {
+        const { characterId, delta } = contra.resolution.relationshipDelta;
+        const current = typeof updatedRelationships[characterId] === 'number'
+          ? (updatedRelationships[characterId] as number)
+          : 0;
+        updatedRelationships[characterId] = current + delta;
+      }
+
+      const nextState: GameState = {
+        ...prev,
+        journal: updatedJournal,
+        storyFlags: updatedStoryFlags,
+        dialogueFlags: updatedDialogueFlags,
+        puzzleFlags: updatedPuzzleFlags,
+        evidence: updatedEvidence,
+        relationshipFlags: updatedRelationships,
+        inspectModal: {
+          title: `تناقض اثبات شد: ${contra.name}`,
+          description: contra.resolution.reactionText,
+          subtext: contra.resolution.subtext || 'خانخله: «دروغ هرچقدر هم قشنگ بافته بشه، لای انگشت‌های واقعیت پاره میشه!»',
+        },
+      };
+
+      autoSave(nextState);
+      return nextState;
+    });
+
+    showToast(`تناقض اثبات شد: ${contra.name}`);
+  };
+
   // Main UI render
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-black select-none text-[#e8ded2] font-sans">
@@ -642,6 +706,7 @@ export default function App() {
             <JournalModal
               gameState={gameState}
               onClose={() => setGameState(prev => ({ ...prev, isJournalOpen: false }))}
+              onResolveContradiction={handleResolveContradiction}
             />
           )}
 

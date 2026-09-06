@@ -11,6 +11,7 @@ export interface SaveSlotData {
   timestamp: string;
   sceneName: string;
   state: {
+    act?: number;
     currentScene: GameState['currentScene'];
     inventory: GameState['inventory'];
     evidence: GameState['evidence'];
@@ -37,6 +38,7 @@ export const SaveManager = {
 
     // Base polyfills
     const polyfilled: SaveSlotData['state'] = {
+      act: typeof savedState.act === 'number' ? savedState.act : (savedState.storyFlags?.act2_started ? 2 : 1),
       currentScene: savedState.currentScene || 'outer_alley',
       inventory: Array.isArray(savedState.inventory) ? [...savedState.inventory] : [],
       evidence: typeof savedState.evidence === 'object' && savedState.evidence ? { ...savedState.evidence } : {},
@@ -84,9 +86,16 @@ export const SaveManager = {
         intro: 'مقدمه سینمایی',
         outer_alley: 'کوچه بیرونی',
         courtyard: 'حیاط مسافرخانه',
-        mirza_room: 'اتاق میرزا صفدر',
+        mirza_room: 'اتاق میرزا صفدر (پرده ۱)',
         stable: 'اصطبل کاروانسرا',
         act1_outro: 'پرده اول: پایان',
+        mirza_room_act2: 'اتاق میرزا (پرده ۲: دفتر خالی)',
+        bazaar: 'بازارچه سرپوشیده',
+        papermaker_shop: 'دکان کاغذسازی صادق',
+        yaqub_house: 'خانه یعقوب نابینا',
+        yaqub_courtyard: 'حیاط خلوت یعقوب',
+        qanat_entrance: 'دهانه قنات متروک',
+        act2_outro: 'پرده دوم: پایان',
       };
 
       const now = new Date();
@@ -103,6 +112,7 @@ export const SaveManager = {
         timestamp: dateStr,
         sceneName: sceneNames[state.currentScene] || state.currentScene,
         state: {
+          act: state.act || (state.storyFlags?.act2_started ? 2 : 1),
           currentScene: state.currentScene,
           inventory: [...state.inventory],
           evidence: { ...state.evidence },

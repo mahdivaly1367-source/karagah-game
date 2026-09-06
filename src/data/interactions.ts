@@ -104,7 +104,17 @@ export const OBJECT_INTERACTIONS: Record<string, ObjectInteractionDef> = {
   door_to_mirza_room: {
     objectId: 'door_to_mirza_room',
     role: 'Navigation',
-    changesScene: 'mirza_room',
+    handler: (state) => ({
+      stateUpdates: {
+        currentScene: (state.act === 2 || state.storyFlags?.act2_started) ? 'mirza_room_act2' : 'mirza_room',
+      },
+    }),
+  },
+
+  door_courtyard_to_bazaar: {
+    objectId: 'door_courtyard_to_bazaar',
+    role: 'Navigation',
+    changesScene: 'bazaar',
   },
 
   door_to_stable: {
@@ -321,6 +331,11 @@ export const OBJECT_INTERACTIONS: Record<string, ObjectInteractionDef> = {
         newInv.push('ledger_act2_raw');
         updates.inventory = newInv;
       }
+      updates.evidence = {
+        ...state.evidence,
+        ev_act2_razor_cut_pages: true,
+        ev_act2_pen_indentation: true,
+      };
       return {
         stateUpdates: updates,
         toastMessage: 'دفترچه دستکاری‌شده میرزا بررسی و به کوله‌پشتی اضافه شد.',
@@ -330,7 +345,7 @@ export const OBJECT_INTERACTIONS: Record<string, ObjectInteractionDef> = {
     discoversEvidence: 'ev_act2_razor_cut_pages',
     inspectModal: {
       title: 'دفترچه بریده‌شده میرزا صفدر',
-      description: 'رد تیغ دباغی بسیار ظریفی روی عطف دفتر به جا مانده است؛ صفحات شماره ۹ تا ۱۲ بریده شده‌اند. اما در صفحات سفید پایانی، شیارهای عمیق ناشی از فشار قلم‌نی میرزا بر کاغذ آهارمهره اصفهان قابل مشاهده است!',
+      description: 'رد تیغ دباغی بسیار ظریفی روی عطف دفتر به جا مانده است؛ صفحات شماره ۹ تا ۱۲ بریده شده‌اند. اما در صفحات سفید پایانی، شیارهای عمیق ناشی از فشار قلم‌نی میرزا بر کاغذ آهارمهره اصفهان به وضوح حس می‌شود!',
       subtext: 'خانخله: «جوهر رو پاک کردی یا صفحه رو بریدی، اما قلم‌نی میرزا عمیق‌تر از تیغ تو به تن این کاغذ فرو رفته! اگه روش سایه بزنیم، خطوط خودشون رو نشون میدن.»',
     },
   },
@@ -338,10 +353,12 @@ export const OBJECT_INTERACTIONS: Record<string, ObjectInteractionDef> = {
   obj_act2_oil_lamp: {
     objectId: 'obj_act2_oil_lamp',
     role: 'Puzzle',
+    discoversEvidence: 'ev_act2_pen_indentation',
+    evidenceNotice: 'سرنخ آشکار شد: نور مایل چراغ‌موشی شیارهای فشار قلم‌نی را نشان داد!',
     inspectModal: {
-      title: 'چراغ‌موشی سفالی',
-      description: 'شعله چراغ ملایم است و بوی روغن پیه می‌دهد. برای دیدن خطوط مورب یا آزمایش گرما روی کاغذ به کار می‌آید.',
-      subtext: 'خانخله: «حرارت ملایم شاید جوهر لیمو رو بسوزونه، ولی بافت این کاغذ نشاسته‌ای با آتیش بازی نمی‌کنه.»',
+      title: 'چراغ‌موشی سفالی و زاویه نور مایل',
+      description: 'با نزدیک کردن شعله چراغ‌موشی با زاویه مایل به صفحات سفید دفترچه، سایه‌های ریزی در دل شیارهای عمیق قلم‌نی پدیدار می‌شود که گواه حک شدن متنی زیرین است.',
+      subtext: 'خانخله: «نور کج چراغ سایه میندازه روی چاله‌های قلم‌نی میرزا. نوشته‌ای زیر این سفیدی دفن شده که با سایه‌زنی دوده زنده میشه!»',
     },
   },
 
@@ -582,7 +599,54 @@ export const OBJECT_INTERACTIONS: Record<string, ObjectInteractionDef> = {
     objectId: 'obj_qanat_mouth',
     role: 'Evidence',
     discoversEvidence: 'ev_act2_qanat_airshaft_echo',
-    evidenceNotice: 'سرنخ ثبت شد: پژواک توخالی میله‌های قنات متروک!',
+    handler: (state) => {
+      const hasSolvedLedger = !!state.puzzleFlags.empty_ledger_act2_solved;
+      const hasSolvedSound = !!state.puzzleFlags.yaqub_sound_puzzle_solved;
+      const hasToken = !!state.evidence.ev_act2_copper_token_cipher || state.inventory.includes('qanat_copper_token');
+
+      if (hasSolvedLedger && hasSolvedSound && hasToken) {
+        return {
+          stateUpdates: {
+            currentScene: 'act2_outro',
+            storyFlags: {
+              ...state.storyFlags,
+              act2_completed: true,
+            },
+            evidence: {
+              ...state.evidence,
+              ev_act2_qanat_airshaft_echo: true,
+            }
+          },
+          toastMessage: 'تکه‌های معما کنار هم قرار گرفتند: راز پرده دوم فاش شد!',
+          playPuzzleSound: true,
+        };
+      }
+
+      let missingMsg = '';
+      if (!hasSolvedLedger) {
+        missingMsg = 'هنوز راز دستکاری صفحات دفترچه سفید میرزا را آشکار نکرده‌ای (به سایه‌زنی با دوده نیاز داری).';
+      } else if (!hasSolvedSound) {
+        missingMsg = 'هنوز فریب صوتی کاروان شتران را به یعقوب نابینا ثابت نکرده‌ای.';
+      } else if (!hasToken) {
+        missingMsg = 'هنوز آجرچینی مظهر قنات را برای یافتن نشان پنهان به دقت نگشته‌ای.';
+      }
+
+      return {
+        stateUpdates: {
+          evidence: {
+            ...state.evidence,
+            ev_act2_qanat_airshaft_echo: true,
+          },
+          inspectModal: {
+            title: 'دهانه تاریک قنات متروک',
+            description: `بادی سرد و بوی خاکستر از دالان‌های عمیق قنات زوزه می‌کشد. شواهد نشان می‌دهد که نقشه غارت ساختگی بوده است، اما هنوز پازل کامل نشده است.\n\n[راهنمایی خانخله: ${missingMsg}]`,
+            subtext: 'خانخله: «باید دست پر باشم تا بتونم تو دهن این دزدها و رمال‌ها بزنم. بریم بقیه شواهد رو جمع کنیم!»',
+          }
+        },
+        toastMessage: 'سرنخ ثبت شد: پژواک توخالی میله‌های قنات متروک',
+        playEvidenceSound: true,
+      };
+    },
     inspectModal: {
       title: 'دهانه تاریک قنات متروک',
       description: 'بادی سرد و بوی خاکستر و گوگرد از دالان‌های عمیق زیرزمینی قنات به بیرون می‌وزد. صدای عبور آب شنیده نمی‌شود.',

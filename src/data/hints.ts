@@ -39,38 +39,38 @@ export const HINTS: HintStage[] = [
   // --- ACT 2 HINTS ---
   // 5. Act 2 Start: Re-examining Mirza's room for the second hidden ledger
   {
-    condition: (state: GameState) => (state.act === 2 || state.storyFlags['act2_started']) && !state.inventory.includes('ledger_act2_raw'),
-    level1: 'خانخله می‌داند میرزا صفدر آدم یک‌دفتره‌ای نبوده است. حس ششم می‌گوید یک تخته زیر فرش لق می‌زند.',
-    level2: 'در حجره میرزا صفدر (پرده دوم)، کف‌پوش چوبی کنار میز و لبه طاقچه را بکاو. تختهٔ چوبی شل زیر فرش صدای توخالی می‌دهد.',
-    level3: 'روی تخته شل کف اتاق میرزا صفدر کلیک کن تا دفترچه جلد چرمی پنهان با صفحات سفید آهارمهره را برداری.'
+    condition: (state: GameState) => (state.act === 2 || state.storyFlags['act2_started']) && !state.inventory.includes('ledger_act2_raw') && !state.inventory.includes('reconstructed_ledger_act2'),
+    level1: 'میرزا صفدر با تیغ صفحات را بریده، اما فشار قلم هنوز روی کاغذهای سفید باقیمانده زنده است.',
+    level2: 'در حجره میرزا صفدر (پرده دوم)، دفترچه بریده‌شده روی میز را بردار و به چراغ‌موشی روی طاقچه نگاه کن.',
+    level3: 'دفترچه بریده‌شده روی میز میرزا را بررسی کن تا به کوله‌پشتی اضافه شود؛ سپس متوجه شیارهای عمیق فشار قلم‌نی بر کاغذ آهارمهره خواهی شد.'
   },
-  // 6. Act 2: Market & Paper shop - Gathering shading materials and listening to bells
+  // 6. Act 2: Market & Paper shop - Gathering shading materials
   {
     condition: (state: GameState) => (state.act === 2 || state.storyFlags['act2_started']) && !state.inventory.includes('shading_kit'),
-    level1: 'کاغذ آهارمهره را با زغال معمولی نمی‌شود خواند؛ دوده لطیف بید می‌خواهد و موی شتر. بازارچه را زیر پا بگذار.',
-    level2: 'به بازارچه سرپوشیده برو؛ قاسم زنگوله‌ساز را پیدا کن و به صدای زنگوله‌های تقلبی‌اش گوش بده. سپس وارد دکان کاغذفروشی صادق شو.',
-    level3: 'در دکان کاغذفروشی با صادق صحبت کن، جعبه دوده بید و قلم‌موی موی شتر را بگیر و در اینونتوری این دو را با هم ترکیب کن تا «کیت سایه‌زنی» ساخته شود.'
+    level1: 'کاغذ آهارمهره اصفهان را با زغال معمولی نمی‌توان خواند؛ دوده لطیف بید می‌خواهد و قلم‌موی موی شتر.',
+    level2: 'از در خروجی به بازارچه آبادی برو. در راسته بازار به سراغ دکان کاغذسازی اوستا صادق برو و با او صحبت کن.',
+    level3: 'در دکان اوستا صادق، سینی گرد دوده بید و قلم‌موی موی شتر را بردار (یا از اوستا بگیر) و در کوله‌پشتی با هم ترکیب (Combine) کن تا کیت سایه‌زنی ساخته شود.'
   },
   // 7. Act 2: Revealing the Act 2 ledger with the shading kit
   {
-    condition: (state: GameState) => (state.act === 2 || state.storyFlags['act2_started']) && !state.puzzleFlags['act2_ledger_revealed'],
-    level1: 'ابزار آماده است. حالا وقت سایه‌زدن بر شیارهای سفید کاغذ شاهانه میرزاست.',
-    level2: 'کیت سایه‌زنی را روی دفترچه سفید آهارمهره استفاده کن، یا در اینونتوری دفترچه را Inspect کن و گزینه سایه‌زنی را بزن.',
-    level3: '«کیت سایه‌زنی دوده بید» را با «دفترچه جلد چرمی با صفحات سفید» ترکیب کن تا نام یعقوب رمال و رمز هفت صندوق آشکار شود.'
+    condition: (state: GameState) => (state.act === 2 || state.storyFlags['act2_started']) && !state.puzzleFlags['empty_ledger_act2_solved'],
+    level1: 'کیت سایه‌زنی آماده است. حالا وقت نوازش دادن شیارهای سفید کاغذ میرزاست.',
+    level2: 'کیت سایه‌زنی دوده را روی دفترچه بریده‌شده میرزا به کار ببر.',
+    level3: 'در کوله‌پشتی «کیت سایه‌زنی صحافی» را با «دفترچه دستکاری‌شده میرزا» ترکیب کن تا راز وحشتناک خالی بودن صندوق‌ها فاش شود!'
   },
-  // 8. Act 2: Confronting Yaqub and searching the courtyard
+  // 8. Act 2: Confronting Yaqub and uncovering the bell illusion
   {
-    condition: (state: GameState) => (state.act === 2 || state.storyFlags['act2_started']) && !state.evidence['ev_qanat_secret_path'],
-    level1: 'یعقوب رمال خیال کرده با فال نخود و آیینه می‌شود بوی توطئه را پنهان کرد. حیاط خانه‌اش را وارسی کن.',
-    level2: 'به خانه یعقوب برو. با یعقوب و مه‌بانو گفتگو کن و تناقض صدای زنگوله یا کاغذ آهارمهره را به رخ او بکش. سپس حیاط خلوت یعقوب را بگرد.',
-    level3: 'در حیاط خلوت یعقوب، چاه کهنه آب و لانه کبوترها را بررسی کن تا بفهمی راه مخفی به مظهر قنات متروکه می‌رسد.'
+    condition: (state: GameState) => (state.act === 2 || state.storyFlags['act2_started']) && !state.puzzleFlags['yaqub_sound_puzzle_solved'],
+    level1: 'یعقوب نابینا ادعا می‌کند بیست شتر با زنگوله از کوچه‌اش گذشته‌اند... اما شن‌های کوچه با گوش‌های او هم‌عقیده نیستند.',
+    level2: 'به خانه یعقوب در انتهای بازارچه برو؛ با او صحبت کن، سپس به حیاط خلوت یعقوب برو و بوته‌های خار را بگرد.',
+    level3: 'زنگوله حلبی لق را از بوته‌های پای دیوار بردار، نزد یعقوب ببر و با به صدا درآوردنش به او ثابت کن که فریب یک صدای ساختگی را خورده است.'
   },
-  // 9. Act 2 Climax: Investigating the Qanat Entrance
+  // 9. Act 2 Climax: Investigating the Qanat Entrance & Copper Token
   {
-    condition: (state: GameState) => (state.act === 2 || state.storyFlags['act2_started']) && !state.puzzleFlags['act2_qanat_unlocked'],
-    level1: 'باد در دهانه قنات زوزه می‌کشد. سنگ‌بند قنات آخرین مهر و موم راز شتران سرخ است.',
-    level2: 'به مظهر قنات متروکه برو. روزنهٔ سنگی، رد فرغون‌ها و خاک تلمبارشده قنات را به دقت بررسی کن.',
-    level3: 'انگشتر برنجی یا چراغ‌موشی را بر روزنه سنگی قنات به کار ببر تا پلاک مسین ضرابخانه را بیابی و ثابت کنی صندوق‌ها از همان ابتدا خالی بودند!'
+    condition: (state: GameState) => (state.act === 2 || state.storyFlags['act2_started']) && (!state.evidence['ev_act2_copper_token_cipher'] || !state.storyFlags['act2_completed']),
+    level1: 'باد سرد از دهانه قنات متروک زوزه می‌کشد؛ نشانه‌ای فلزی در لای آجرچینی پنهان است.',
+    level2: 'از حیاط یعقوب به سمت دهانه قنات متروک برو. آجرچینی دیوار و دهانه تاریک قنات را وارسی کن.',
+    level3: 'آجرچینی قنات را بررسی کن تا «پلاک مسین خزانهٔ باد» را بیابی، سپس دهانه قنات را وارسی کن تا خانخله پرده از کل ماجرای غارت صوری بردارد!'
   }
 ];
 

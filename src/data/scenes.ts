@@ -120,6 +120,15 @@ export const SCENES: Record<SceneId, SceneConfig> = {
         bounds: { x: 64, y: 42, width: 14, height: 42 },
         cursorType: 'move',
         hintDescription: 'بازگشت به کوچه بیرونی'
+      },
+      {
+        id: 'door_courtyard_to_bazaar',
+        name: 'دالان خروجی به بازارچه آبادی',
+        description: 'دالانی سنگ‌فرش که از هشتی مسافرخانه به راسته بازارچه آبادی راه دارد.',
+        scene: 'courtyard',
+        bounds: { x: 46, y: 42, width: 14, height: 42 },
+        cursorType: 'move',
+        hintDescription: 'رفتن به بازارچه آبادی'
       }
     ]
   },

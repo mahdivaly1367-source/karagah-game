@@ -27,7 +27,7 @@ export const GAME_CONTRADICTIONS: Record<string, Contradiction> = {
     contradictionDescription: 'حاج مرتضی ادعا می‌کند دیشب فرسنگ‌ها دورتر بوده، اما چکمه‌هایش ثابت می‌کنند دیشب در حیاط همین کاروانسرا قدم می‌زده است.',
     requiredEvidenceIds: ['ev_morteza_boots'],
     isAvailable: (state) => !!state.evidence['ev_morteza_boots'],
-    isResolved: (state) => !!state.dialogueFlags['morteza_mud_confronted'],
+    isResolved: (state) => !!state.dialogueFlags['morteza_mud_confronted'] || !!state.puzzleFlags['morteza_confronted'] || !!state.storyFlags['morteza_contradiction_exposed'],
     resolution: {
       flagsToSet: {
         morteza_mud_confronted: true,
@@ -141,7 +141,7 @@ export const GAME_CONTRADICTIONS: Record<string, Contradiction> = {
     contradictionDescription: 'یعقوب فریب یک صحنه‌سازی صوتی را خورده است؛ هیچ کاروان شتری در کار نبوده و کسی با یک زنگوله معیوب صدای کاروان را جعل کرده بود.',
     requiredEvidenceIds: ['ev_act2_yaqub_bell_testimony', 'ev_act2_iron_clapper_sound'],
     isAvailable: (state) => !!state.evidence['ev_act2_yaqub_bell_testimony'] && !!state.evidence['ev_act2_iron_clapper_sound'],
-    isResolved: (state) => !!state.dialogueFlags['yaqub_sound_puzzle_solved'],
+    isResolved: (state) => !!state.dialogueFlags['yaqub_sound_puzzle_solved'] || !!state.puzzleFlags['yaqub_sound_puzzle_solved'] || !!state.storyFlags['yaqub_contradiction_exposed'],
     resolution: {
       flagsToSet: {
         yaqub_sound_puzzle_solved: true,
@@ -221,7 +221,7 @@ export const GAME_CONTRADICTIONS: Record<string, Contradiction> = {
     contradictionDescription: 'پاک‌کننده ناشی دفتر نمی‌دانسته که قلم سنگین میرزا بر بافت ضخیم آهارمهره اثری همیشگی بر جا می‌گذارد که با سایه‌زنی دوده قابل احیاست.',
     requiredEvidenceIds: ['ev_act2_razor_cut_pages', 'ev_act2_paper_grain_sadiq'],
     isAvailable: (state) => !!state.evidence['ev_act2_razor_cut_pages'] && !!state.evidence['ev_act2_paper_grain_sadiq'],
-    isResolved: (state) => !!state.puzzleFlags['paper_technique_understood'],
+    isResolved: (state) => !!state.puzzleFlags['paper_technique_understood'] || !!state.puzzleFlags['empty_ledger_act2_solved'] || !!state.puzzleFlags['shading_kit_crafted'],
     resolution: {
       flagsToSet: {
         paper_technique_understood: true,
