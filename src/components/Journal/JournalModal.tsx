@@ -209,7 +209,7 @@ export const JournalModal: React.FC<JournalModalProps> = ({ gameState, onClose, 
               soundManager.playClick();
               onClose();
             }}
-            className="p-1 rounded-lg hover:bg-[#311c10] text-[#ba9a7b] hover:text-white border border-[#4d2d18] transition-colors"
+            className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg hover:bg-[#311c10] text-[#ba9a7b] hover:text-white border border-[#4d2d18] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -233,7 +233,7 @@ export const JournalModal: React.FC<JournalModalProps> = ({ gameState, onClose, 
                   soundManager.playClick();
                   setActiveTab(tab.key as TabType);
                 }}
-                className={`flex items-center gap-1.5 py-2 px-3 rounded-lg whitespace-nowrap transition-all ${
+                className={`flex items-center gap-1.5 py-2.5 px-3 min-h-[44px] rounded-lg whitespace-nowrap transition-all ${
                   isActive
                     ? 'bg-[#472714] text-[#ffd4aa] border border-[#a86538] shadow-md'
                     : 'text-[#ab8c70] hover:text-[#faebd7] hover:bg-[#28170d]'

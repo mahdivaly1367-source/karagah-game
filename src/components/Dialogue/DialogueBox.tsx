@@ -70,8 +70,8 @@ export const DialogueBox: React.FC<DialogueBoxProps> = ({
       dir="rtl"
     >
       {/* Character Portrait Card */}
-      <div className="relative shrink-0 flex flex-col items-center justify-center p-2 rounded-xl bg-[#201711]/95 border-2 border-[#8b6546] shadow-2xl backdrop-blur-md w-28 md:w-40">
-        <div className="w-20 h-20 md:w-28 md:h-28 rounded-lg overflow-hidden border border-[#b88c64] bg-stone-900 shadow-inner">
+      <div className="relative shrink-0 flex flex-row md:flex-col items-center justify-start md:justify-center p-2 rounded-xl bg-[#201711]/95 border-2 border-[#8b6546] shadow-2xl backdrop-blur-md w-full md:w-40 gap-3 md:gap-0">
+        <div className="w-14 h-14 md:w-28 md:h-28 rounded-lg overflow-hidden border border-[#b88c64] bg-stone-900 shadow-inner shrink-0">
           <img 
             src={character.portrait} 
             alt={dialogueNode.speaker} 
@@ -79,7 +79,7 @@ export const DialogueBox: React.FC<DialogueBoxProps> = ({
             referrerPolicy="no-referrer"
           />
         </div>
-        <div className="mt-2 text-center">
+        <div className="md:mt-2 text-right md:text-center">
           <div className="font-bold text-[#f5ebd9] text-sm md:text-base leading-tight">
             {dialogueNode.speaker}
           </div>
@@ -97,7 +97,7 @@ export const DialogueBox: React.FC<DialogueBoxProps> = ({
         onClick={handleBoxClick}
       >
         {/* Dialogue Text */}
-        <div className="min-h-[60px] md:min-h-[75px] text-[#faebd7] leading-relaxed text-base md:text-lg font-medium pr-1">
+        <div className="min-h-[50px] md:min-h-[75px] text-[#faebd7] leading-relaxed text-sm md:text-lg font-medium pr-1">
           {displayedText}
           {!isTypingComplete && (
             <span className="inline-block w-2 h-4 bg-[#e6a86c] ml-1 animate-pulse" />
@@ -107,7 +107,7 @@ export const DialogueBox: React.FC<DialogueBoxProps> = ({
         {/* Options List */}
         {isTypingComplete && availableOptions.length > 0 && (
           <div 
-            className="mt-3 pt-3 border-t border-[#4a3322] flex flex-col gap-1.5"
+            className="mt-3 pt-3 border-t border-[#4a3322] flex flex-col gap-2"
             onClick={(e) => e.stopPropagation()}
           >
             {availableOptions.map((opt) => (
@@ -117,7 +117,7 @@ export const DialogueBox: React.FC<DialogueBoxProps> = ({
                   soundManager.playClick();
                   onSelectOption(opt);
                 }}
-                className={`group flex items-center justify-between px-3.5 py-2 rounded-lg text-right text-sm md:text-base transition-all duration-150 border ${
+                className={`group flex items-center justify-between px-3.5 py-2.5 min-h-[44px] rounded-lg text-right text-sm md:text-base transition-all duration-150 border ${
                   opt.isEvidenceOption
                     ? 'bg-[#3d1a15]/80 hover:bg-[#57221a] border-[#a83b2d] text-[#ffcfc7]'
                     : 'bg-[#2b1c14]/80 hover:bg-[#422a1e] border-[#5e3e29] text-[#ecd8c2] hover:text-[#fff5e8]'
@@ -146,7 +146,7 @@ export const DialogueBox: React.FC<DialogueBoxProps> = ({
                 soundManager.playClick();
                 onClose();
               }}
-              className="px-4 py-1.5 rounded-lg bg-[#3a2518] hover:bg-[#523422] border border-[#7a4e30] text-[#eddac6] text-xs md:text-sm font-medium transition-colors flex items-center gap-1.5"
+              className="px-5 py-2.5 min-h-[44px] rounded-lg bg-[#3a2518] hover:bg-[#523422] border border-[#7a4e30] text-[#eddac6] text-xs md:text-sm font-medium transition-colors flex items-center gap-1.5"
             >
               <span>پایان گفتگو</span>
               <ChevronLeft className="w-3.5 h-3.5" />

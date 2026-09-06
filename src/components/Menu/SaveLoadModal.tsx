@@ -71,7 +71,7 @@ export const SaveLoadModal: React.FC<SaveLoadModalProps> = ({
             soundManager.playClick();
             onClose();
           }}
-          className="absolute top-4 left-4 p-1.5 rounded-lg bg-[#2a1b12] hover:bg-[#42291a] text-[#bda083] hover:text-white border border-[#5a3821] transition-colors"
+          className="absolute top-4 left-4 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg bg-[#2a1b12] hover:bg-[#42291a] text-[#bda083] hover:text-white border border-[#5a3821] transition-colors"
         >
           <X className="w-5 h-5" />
         </button>
@@ -128,7 +128,7 @@ export const SaveLoadModal: React.FC<SaveLoadModalProps> = ({
 
               {mode === 'load' && (
                 <button
-                  className="px-3.5 py-1.5 rounded-lg bg-[#b45309] hover:bg-[#d97706] text-white text-xs font-bold"
+                  className="px-4 py-2 min-h-[44px] rounded-lg bg-[#b45309] hover:bg-[#d97706] text-white text-xs font-bold flex items-center justify-center"
                 >
                   بارگذاری
                 </button>
@@ -181,7 +181,7 @@ export const SaveLoadModal: React.FC<SaveLoadModalProps> = ({
                         e.stopPropagation();
                         handleSave(num);
                       }}
-                      className="px-4 py-1.5 rounded-lg bg-[#924a21] hover:bg-[#b55e2c] text-white text-xs font-bold transition-colors"
+                      className="px-4 py-2 min-h-[44px] rounded-lg bg-[#924a21] hover:bg-[#b55e2c] text-white text-xs font-bold transition-colors flex items-center justify-center"
                     >
                       {slotData ? 'بازنویسی (Save)' : 'ذخیره'}
                     </button>
@@ -191,7 +191,7 @@ export const SaveLoadModal: React.FC<SaveLoadModalProps> = ({
                         e.stopPropagation();
                         handleLoad(slotData);
                       }}
-                      className="px-4 py-1.5 rounded-lg bg-[#b45309] hover:bg-[#d97706] text-white text-xs font-bold transition-colors"
+                      className="px-4 py-2 min-h-[44px] rounded-lg bg-[#b45309] hover:bg-[#d97706] text-white text-xs font-bold transition-colors flex items-center justify-center"
                     >
                       بارگذاری
                     </button>
@@ -200,7 +200,7 @@ export const SaveLoadModal: React.FC<SaveLoadModalProps> = ({
                   {slotData && (
                     <button
                       onClick={(e) => handleDelete(num, e)}
-                      className="p-1.5 rounded-lg hover:bg-rose-950/80 text-[#85513d] hover:text-rose-400 transition-colors"
+                      className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg hover:bg-rose-950/80 text-[#85513d] hover:text-rose-400 transition-colors"
                       title="حذف ذخیره"
                     >
                       <Trash2 className="w-4 h-4" />

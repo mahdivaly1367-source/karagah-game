@@ -624,20 +624,30 @@ export default function App() {
         <OutroAct1
           onStartAct2={() => {
             soundManager.playDoorCreak();
-            setGameState(prev => ({
-              ...prev,
-              currentScene: 'mirza_room_act2',
-              act: 2,
-              storyFlags: { ...prev.storyFlags, act2_started: true },
-            }));
+            setGameState(prev => {
+              const nextState: GameState = {
+                ...prev,
+                currentScene: 'mirza_room_act2',
+                act: 2,
+                storyFlags: { ...prev.storyFlags, act2_started: true },
+              };
+              autoSave(nextState);
+              return nextState;
+            });
           }}
           onRestart={() => {
-            setGameState(prev => ({
-              ...prev,
-              currentScene: 'mirza_room',
-            }));
+            soundManager.playClick();
+            setGameState(prev => {
+              const nextState: GameState = {
+                ...prev,
+                currentScene: 'mirza_room',
+              };
+              autoSave(nextState);
+              return nextState;
+            });
           }}
           onReturnToMenu={() => {
+            soundManager.playClick();
             setGameState(prev => ({ ...prev, isMenuOpen: true }));
           }}
         />
@@ -645,13 +655,19 @@ export default function App() {
         /* 4. Outro Climax Act 2 */
         <OutroAct2
           onReturnToMenu={() => {
+            soundManager.playClick();
             setGameState(prev => ({ ...prev, isMenuOpen: true }));
           }}
           onExplore={() => {
-            setGameState(prev => ({
-              ...prev,
-              currentScene: 'bazaar',
-            }));
+            soundManager.playClick();
+            setGameState(prev => {
+              const nextState: GameState = {
+                ...prev,
+                currentScene: 'bazaar',
+              };
+              autoSave(nextState);
+              return nextState;
+            });
           }}
         />
       ) : (
