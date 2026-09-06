@@ -390,6 +390,54 @@ class SoundManager {
       // Ignore
     }
   }
+
+  // Act 3: Water splash / river plunge
+  public playWaterSplash() {
+    try {
+      this.initContext();
+      if (!this.ctx || !this.sfxGain) return;
+      const now = this.ctx.currentTime;
+      [140, 220, 310, 180].forEach((freq, idx) => {
+        const osc = this.ctx!.createOscillator();
+        const gain = this.ctx!.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.04);
+        osc.frequency.exponentialRampToValueAtTime(60, now + idx * 0.04 + 0.25);
+        gain.gain.setValueAtTime(0.12, now + idx * 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.04 + 0.25);
+        osc.connect(gain);
+        gain.connect(this.sfxGain!);
+        osc.start(now + idx * 0.04);
+        osc.stop(now + idx * 0.04 + 0.25);
+      });
+    } catch {
+      // Ignore
+    }
+  }
+
+  // Act 3: Winch mechanical gears turning
+  public playWinchCrank() {
+    try {
+      this.initContext();
+      if (!this.ctx || !this.sfxGain) return;
+      const now = this.ctx.currentTime;
+      [0, 0.08, 0.16, 0.24].forEach((offset) => {
+        const osc = this.ctx!.createOscillator();
+        const gain = this.ctx!.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(160 + Math.random() * 30, now + offset);
+        osc.frequency.exponentialRampToValueAtTime(80, now + offset + 0.06);
+        gain.gain.setValueAtTime(0.14, now + offset);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.07);
+        osc.connect(gain);
+        gain.connect(this.sfxGain!);
+        osc.start(now + offset);
+        osc.stop(now + offset + 0.07);
+      });
+    } catch {
+      // Ignore
+    }
+  }
 }
 
 export const soundManager = new SoundManager();

@@ -214,5 +214,184 @@ export const GAME_EVIDENCE: Record<string, Evidence> = {
     relatedPuzzles: ['puzzle_audio_bell_contradiction'],
     discovered: false,
     analysisText: 'خانخله: «عطر کندر و شال ارغوانی... رعنا! پس اون فقط یه مسافر ساده نبوده؛ قبل از این‌که آفتاب بزنه دنبال اسناد میرزا بوده.»'
+  },
+  // Act 3 Evidence Items
+  ev_act3_heydar_testimony: {
+    id: 'ev_act3_heydar_testimony',
+    name: 'شهادت حیدر: «ماهی از تور بیرون پرید»',
+    description: 'حیدر قسم می‌خورد که نیمه‌شب حادثه، فقط صدای غلغل شدید آب و صدای پریدن ماهی بزرگی از تور را شنیده است.',
+    source: 'حیدرِ پل (دیده‌بان پل قدیمی)',
+    relatedCharacters: ['حیدرِ پل'],
+    relatedLocations: ['پل قدیمی'],
+    relatedPuzzles: ['puzzle_act3_net', 'puzzle_act3_fish_cipher'],
+    discovered: false,
+    analysisText: 'خانخله: «ماهی از تور پرید؟ تو این سرمای گزنده کویر، قزل‌آلا هم کز می‌کنه کف سنگ‌ها! حیدر چیزی دیده که زبونش از ترسم بند اومده.»'
+  },
+  ev_act3_safar_fish_reality: {
+    id: 'ev_act3_safar_fish_reality',
+    name: 'شهادت عمو صفر: فصل خواب ماهیان رودخانه',
+    description: 'عمو صفر ماهیگیر تصریح می‌کند در این فصل سال، هیچ ماهی جهنده‌ای با آن وزن و صدا در آب‌های ریگستان وجود ندارد و ماهی‌ها به گل کف چسبیده‌اند.',
+    source: 'عمو صفر (کلبه ماهیگیر)',
+    relatedCharacters: ['عمو صفر'],
+    relatedLocations: ['کلبه ماهیگیر', 'رودخانه'],
+    relatedPuzzles: ['puzzle_act3_fish_cipher'],
+    discovered: false,
+    analysisText: 'خانخله: «پیرمرد شصت ساله داره تو این آب قلاب میندازه. اگر اون میگه ماهی به این بزرگی نمی‌پره، پس چیزی که حیدر دیده پوست و پولک نداشته!»'
+  },
+  ev_act3_underbridge_wire_cable: {
+    id: 'ev_act3_underbridge_wire_cable',
+    name: 'کابل‌های ضخیم فولادی و قرقره‌های زیر پل',
+    description: 'زیر طاق میانی، بقایای یک شبکه بافته از کابل فلزی و قرقره‌های چدنی دیده می‌شود که توان تحمل وزن چندصد من بار را دارند.',
+    source: 'طاق میانی زیر پل قدیمی',
+    relatedCharacters: ['حیدرِ پل'],
+    relatedLocations: ['زیر پل'],
+    relatedPuzzles: ['puzzle_act3_net'],
+    discovered: false,
+    analysisText: 'خانخله: «این تور ماهیگیری نیست، قفسه مهار کشش باره! با این کابل‌ها میشه یه گاری رو از توی آب کشید بالا!»'
+  },
+  ev_act3_hemp_net_claim: {
+    id: 'ev_act3_hemp_net_claim',
+    name: 'ادعای حیدر درباره تور کهنه کنفی',
+    description: 'حیدر اصرار دارد که طناب‌های زیر پل فقط یک تور نخ‌نمای کنفی برای صید ماهی و جمع‌آوری خس و خاشاک رودخانه بوده است.',
+    source: 'اظهارات اولیه حیدرِ پل',
+    relatedCharacters: ['حیدرِ پل'],
+    relatedLocations: ['پل قدیمی'],
+    relatedPuzzles: ['puzzle_act3_net'],
+    discovered: false,
+    isFakeClue: true,
+    analysisText: 'خانخله: «تور کنفی؟! دست‌هام رو با روغن کابل‌های فولادی زیر پل سیاه کردم. حیدر خیال کرده من تا حالا نخ کنف ندیدم؟»'
+  },
+  ev_act3_bahram_patrol_log: {
+    id: 'ev_act3_bahram_patrol_log',
+    name: 'دفتر وقایع پاسگاه: ثبت کذایی آرامش شبانه',
+    description: 'نایب بهرام در دفتر پاسگاه نگاشته که در ساعت ۲ بامداد، هیچ تردد یا حادثه‌ای رخ نداده و مسیر کاملاً بسته و در امن و امان بوده است.',
+    source: 'میز قراولخانه پاسگاه راه',
+    relatedCharacters: ['نایب بهرام'],
+    relatedLocations: ['پاسگاه راه'],
+    relatedPuzzles: ['puzzle_act3_water_current'],
+    discovered: false,
+    analysisText: 'خانخله: «نایب بهرام خطش رو مثل آب روان کشیده: "ساعت دو بامداد، آرامش مطلق". ولی آدم‌های آروم، کیسه سکه طلا زیر متکا قایم نمی‌کنن!»'
+  },
+  ev_act3_mill_jam_record: {
+    id: 'ev_act3_mill_jam_record',
+    name: 'توقف ناگهانی پره‌های آسیاب در ساعت ۲ بامداد',
+    description: 'ماه‌نگار شهادت می‌دهد که در ساعت دو بامداد، چرخ سنگین آسیاب با برخورد جسمی سنگین و جهنده به پره‌های آبگردان ناگهان از حرکت ایستاد.',
+    source: 'ماه‌نگار (آسیاب آبی)',
+    relatedCharacters: ['ماه‌نگار'],
+    relatedLocations: ['آسیاب'],
+    relatedPuzzles: ['puzzle_act3_water_current'],
+    discovered: false,
+    analysisText: 'خانخله: «درست در همون ساعتی که پاسگاه نوشته "هیچ خبری نبوده"، چرخ آسیاب با ضربه یه شیء فلزی خرد شده! زمان‌بندی داره با ما حرف میزنه.»'
+  },
+  ev_act3_zinc_fish_cylinder: {
+    id: 'ev_act3_zinc_fish_cylinder',
+    name: 'استوانه رویین آب‌بند (ماهی فلزی)',
+    description: 'محفظه‌ای سنگین و دوکی‌شکل با بدنه فلزی براق و درپوش پیچی ممهور به موم سرخ سلطنتی که در آبراه آسیاب گیر افتاده بود.',
+    source: 'دریچه ورودی سنگ‌آسیاب',
+    relatedCharacters: ['ماه‌نگار', 'حیدرِ پل'],
+    relatedLocations: ['آسیاب', 'رودخانه'],
+    relatedPuzzles: ['puzzle_act3_fish_cipher'],
+    discovered: false,
+    analysisText: 'خانخله: «این هم از ماهی شاهوار جناب حیدر! ساخته شده از روی و سرب، آب‌بند و ممهور. شمش‌ها و مدارک واقعی رو این‌طوری با آب رد می‌کردن!»'
+  },
+  ev_act3_gholi_diversion_story: {
+    id: 'ev_act3_gholi_diversion_story',
+    name: 'ادعای دروغین قلی درباره پرتاب چوب‌بازی',
+    description: 'قلی ابتدا ادعا می‌کرد که شب حادثه فقط تکه چوب‌های پوسیده را به قصد بازی در دهانه آبراه انداخته است.',
+    source: 'استنطاق اولیه قلی پادو',
+    relatedCharacters: ['قلی'],
+    relatedLocations: ['پاسگاه راه', 'کناره رودخانه'],
+    relatedPuzzles: ['puzzle_act3_fish_cipher'],
+    discovered: false,
+    isFakeClue: true,
+    analysisText: 'خانخله: «بچه جون، چوب بازی که صدای تق‌تق آهن نمیده! کسی بهت نقره داده بود تا دهنت رو ببندی، مگه نه؟»'
+  },
+  ev_act3_river_drift_calculation: {
+    id: 'ev_act3_river_drift_calculation',
+    name: 'محاسبه زمان و خط شناوری جریان آب',
+    description: 'با محاسبه سرعت جریان آب و انحنای گرداب‌ها، هر جسم شناور رهاشده از انبار بالادست، ظرف ۸ دقیقه به زیر پل و در صورت فرار از تور به دهانه آسیاب می‌رسد.',
+    source: 'تحلیل بستر رودخانه و شاغول',
+    relatedCharacters: ['عمو صفر', 'خانخله'],
+    relatedLocations: ['رودخانه', 'زیر پل'],
+    relatedPuzzles: ['puzzle_act3_water_current'],
+    discovered: false,
+    analysisText: 'خانخله: «همه چیز مثل ساعت کار می‌کرده: پرتاب از انبار، جریان تند آب، صید با تور سیمی زیر پل. فقط یک استوانه از بند در رفته و کار رو خراب کرده!»'
+  },
+  ev_act3_oilskin_scroll_content: {
+    id: 'ev_act3_oilskin_scroll_content',
+    name: 'سیاهه محرمانه انتقال شمش‌های زر و سیم',
+    description: 'طومار پوستین کشف‌شده درون استوانه که فهرست کامل شمش‌های خارج‌شده از خزانه با نام رمزی "ماهیان هفت‌گانه" را ثبت کرده است.',
+    source: 'داخل استوانه رویین ممهور',
+    relatedCharacters: ['میرزا صفدر', 'حاج مرتضی'],
+    relatedLocations: ['آسیاب'],
+    relatedPuzzles: ['puzzle_act3_reconstruction'],
+    discovered: false,
+    analysisText: 'خانخله: «سیاهه سیاه! هفت شمش طلا به وزن هفتصد مثقال که توی قالب‌های سربی ریخته شده بود. کاروان فقط یه پوشش خاکی برای این مسیر آبی بوده!»'
+  },
+  ev_act3_warehouse_camels_harness: {
+    id: 'ev_act3_warehouse_camels_harness',
+    name: 'جل‌ها و نمد داغ‌خورده شتران در انبار متروک',
+    description: 'یراق‌ها و نمد پشمی مخفی‌شده در گوشه تاریک انبار با علامت داغ شتران سرخ کاروانسرای ریگستان.',
+    source: 'کف انبار متروک بالادست',
+    relatedCharacters: ['حاج مرتضی', 'حیدرِ پل'],
+    relatedLocations: ['انبار متروک'],
+    relatedPuzzles: ['puzzle_act3_reconstruction'],
+    discovered: false,
+    analysisText: 'خانخله: «شترها هرگز بارها رو به مسافرخونه نبردن! دم غروب اومدن توی این انبار مخروبه، بارها خالی شده، و بعد شترهای خسته با بارهای شن فرستاده شدن به آبادی.»'
+  },
+  ev_act3_winch_grease_tracks: {
+    id: 'ev_act3_winch_grease_tracks',
+    name: 'آثار پیه تازه بر دندانه‌های وینچ زیر پل',
+    description: 'گریس و پیه گرگ تازه روی چرخ‌دنده‌های وینچ که ثابت می‌کند شب گذشته محموله‌ای سنگین با آن از دل آب بالا کشیده شده است.',
+    source: 'وینچ پایه‌های زیر پل',
+    relatedCharacters: ['حیدرِ پل'],
+    relatedLocations: ['زیر پل'],
+    relatedPuzzles: ['puzzle_act3_net'],
+    discovered: false,
+    analysisText: 'خانخله: «پیه تازه! حیدر می‌گفت سال‌هاست به این دسته دست نزده، در حالی که دست‌های خودش هنوز بوی چربی و زنگ‌آهن میده.»'
+  },
+  ev_act3_secret_culvert_hatch: {
+    id: 'ev_act3_secret_culvert_hatch',
+    name: 'دریچه ناودانی سنگی انبار به رودخانه',
+    description: 'یک آبراهه شیب‌دار زیرزمینی که کف انبار متروک را مستقیماً به عمق آب‌های خروشان رودخانه متصل می‌کند.',
+    source: 'زیر سنگ‌فرش لق انبار متروک',
+    relatedCharacters: ['قلی', 'ناشناس'],
+    relatedLocations: ['انبار متروک', 'رودخانه'],
+    relatedPuzzles: ['puzzle_act3_reconstruction'],
+    discovered: false,
+    analysisText: 'خانخله: «عجب مهارتی در مهندسی دزدی! استوانه‌ها رو از این ناودانی سر می‌دادن تو آب و آب خروشان اون‌ها رو می‌برد صاف زیر پایه‌های پل حیدر.»'
+  },
+  ev_act3_bahram_bribe_toman: {
+    id: 'ev_act3_bahram_bribe_toman',
+    name: 'سکه‌های زرین رشوه در گنجه پاسگاه',
+    description: 'کیسه‌ای حاوی سکه‌های تازه و براق دربار که با عجله زیر آستر گنجه مأمور قراولخانه پنهان شده بود.',
+    source: 'گنجه اختصاصی نایب بهرام',
+    relatedCharacters: ['نایب بهرام'],
+    relatedLocations: ['پاسگاه راه'],
+    relatedPuzzles: ['puzzle_act3_reconstruction'],
+    discovered: false,
+    analysisText: 'خانخله: «حق‌السکوت! برای این‌که چشمان تیز نایب بهرام موقع عبور ارابه شترداران کور بشه، چه بهای سنگینی پرداختن.»'
+  },
+  ev_act3_mirza_roshan_seal: {
+    id: 'ev_act3_mirza_roshan_seal',
+    name: 'مهر برنجی طراح شبکه: «میرزا روشن»',
+    description: 'مهر استوانه‌ای برنجی با نقش نگین دیوانی: "میرزا روشن - مستوفی اول محاسبات دربار". حلقه اتصال تمام توطئه‌ها به پایتخت.',
+    source: 'جعبه ابزار مخفی متولی پل',
+    relatedCharacters: ['حیدرِ پل', 'میرزا صفدر'],
+    relatedLocations: ['زیر پل', 'پل قدیمی'],
+    relatedPuzzles: ['puzzle_act3_reconstruction'],
+    discovered: false,
+    analysisText: 'خانخله: «میرزا روشن! بالاخره سر این کلاف سردرگم رسید به دارالخلافه. میرزا صفدر قربانی شد چون خطای دفتر میرزا روشن رو کشف کرده بود!»'
+  },
+  ev_act3_heydar_fear_confession: {
+    id: 'ev_act3_heydar_fear_confession',
+    name: 'اعتراف حیدر به تهدید و اجبار جانی',
+    description: 'حیدر با چشمانی هراسان اعتراف می‌کند که مأموران دیوان جان خانواده‌اش را گروگان گرفته بودند تا محموله‌ها را با وینچ بالا بکشد و دم نزند.',
+    source: 'استنطاق نهایی حیدرِ پل',
+    relatedCharacters: ['حیدرِ پل'],
+    relatedLocations: ['پل قدیمی'],
+    relatedPuzzles: ['puzzle_act3_reconstruction'],
+    discovered: false,
+    analysisText: 'خانخله: «حیدر دزد نبود، یک چرخ‌دنده ترسان در ماشین بزرگی بود که از پایتخت کوک می‌شد. وقتی ماهی در رفت، بند دل این مرد هم پاره شد.»'
   }
 };

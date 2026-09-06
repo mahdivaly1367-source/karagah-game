@@ -195,4 +195,98 @@ export const GAME_PUZZLES: Record<string, AnyPuzzle> = {
     },
     isSolved: (state) => !!state.puzzleFlags['lemon_hypothesis_tested'],
   } as ObjectInteractionPuzzle,
+
+  // Act 3 Puzzles
+  // 1. Winch repair under bridge
+  puzzle_act3_winch_repair: {
+    id: 'puzzle_act3_winch_repair',
+    name: 'راه‌اندازی وینچ و کابل پایه‌های پل',
+    type: 'object_interaction',
+    act: 3,
+    description: 'جایگذاری دسته آهنی چدنی در محور وینچ زیر پل و بیرون کشیدن کابل‌های معلق در آب.',
+    targetObjectId: 'obj_underbridge_winch',
+    requiredItemId: 'winch_crank_handle',
+    successNotice: 'وینچ زیر پل به چرخش درآمد و کابل‌های فولادی بالا کشیده شدند!',
+    evidenceToUnlock: 'ev_act3_underbridge_wire_cable',
+    flagsToSet: {
+      winch_repaired: true,
+      underbridge_mechanism_revealed: true,
+    },
+    inspectModal: {
+      title: 'بیرون کشیدن شبکه گیرنده پنهان زیر آب',
+      description: 'دسته چدنی جا افتاد و با چرخش چرخ‌دنده‌ها، رشته‌ای از کابل‌های قطور فولادی و یک سبد توری سنگین سیمی از دل گرداب رودخانه بالا آمد. تکه‌های سیم پاره‌شده نشان می‌دهد که یکی از محموله‌ها زیر فشار آب کابل را دریده و گریخته است!',
+      subtext: 'خانخله: «این تور صید نهنگه نه قزل‌آلا! زیر پایه‌های پل ایستگاه بارگیری سرّی ساخته بودن!»',
+    },
+    isSolved: (state) => !!state.puzzleFlags['winch_repaired'],
+  } as ObjectInteractionPuzzle,
+
+  // 2. Open the zinc fish cylinder with the fisherman's knife
+  puzzle_act3_knife_open_cylinder: {
+    id: 'puzzle_act3_knife_open_cylinder',
+    name: 'برش موم و گشودن استوانه فلزی ماهی',
+    type: 'item_combination',
+    act: 3,
+    description: 'استفاده از کارد تیز استخوانی صیادی برای تراشیدن موم سرخ سلطنتی و باز کردن درپوش پیچی استوانه.',
+    itemA: 'zinc_fish_cylinder',
+    itemB: 'fisherman_knife',
+    resultItemId: 'opened_fish_cylinder',
+    consumedItems: ['zinc_fish_cylinder'],
+    successNotice: 'استوانه رویین باز شد و طومار محرمانه دیوان آشکار گردید!',
+    evidenceToUnlock: 'ev_act3_oilskin_scroll_content',
+    flagsToSet: {
+      cylinder_opened: true,
+      scroll_discovered: true,
+    },
+    inspectModal: {
+      title: 'رمزگشایی بطن ماهی فلزی!',
+      description: 'تیغه تیز کارد لایه ضخیم موم قرمز را کنار زد و با یک چرخش تق‌مانند، درپوش پیچی استوانه باز شد. طوماری چرمی و خشک از درون آن بیرون آمد که بر پیشانی‌اش نگاشته شده: "صورت‌جلسه محرمانه تحویل ماهیان هفت‌گانه ضرابخانه - مهر: میرزا روشن".',
+      subtext: 'خانخله: «ماهی حیدر بالاخره لب باز کرد! شمش‌های زرین توی این قالب‌های فلزی در آب شناور می‌شدن!»',
+    },
+    isSolved: (state) => !!state.puzzleFlags['cylinder_opened'],
+  } as ItemCombinationPuzzle,
+
+  // 3. Water current plummet measurement
+  puzzle_act3_water_drift_plummet: {
+    id: 'puzzle_act3_water_drift_plummet',
+    name: 'محاسبه خط سیر گرداب و مسیر آبراهه',
+    type: 'object_interaction',
+    act: 3,
+    description: 'انداختن شناور شاغول‌دار در گرداب تند رودخانه برای کشف مسیر دقیق حرکت اجسام از انبار تا آسیاب.',
+    targetObjectId: 'obj_river_current_whirlpool',
+    requiredItemId: 'water_plummet_float',
+    successNotice: 'مسیر دقیق جریان هیدرولیکی آبراهه کشف و ترسیم شد!',
+    evidenceToUnlock: 'ev_act3_river_drift_calculation',
+    flagsToSet: {
+      river_flow_calculated: true,
+    },
+    inspectModal: {
+      title: 'ردگیری مسیر جریان آبراهه',
+      description: 'شناور شاغول‌دار در خط اصلی جریان رها شد. آب شناور را مستقیماً از ناودانی انبار بالادست به زیر طاق میانی پل کشاند، و با گذر از نقطه پارگی تور، دقیقاً به دریچه سنگ‌آسیاب ماه‌نگار اصابت کرد. همه قطعات پازل جغرافیایی جور شدند!',
+      subtext: 'خانخله: «آب هیچ‌وقت دروغ نمیگه؛ اگر استوانه‌ای تو انبار به آب انداخته بشه، دقیقاً ساعت دو میرسه لای پره‌های ماه‌نگار!»',
+    },
+    isSolved: (state) => !!state.puzzleFlags['river_flow_calculated'],
+  } as ObjectInteractionPuzzle,
+
+  // 4. Confronting Heydar with the revealed scroll
+  puzzle_act3_confront_heydar: {
+    id: 'puzzle_act3_confront_heydar',
+    name: 'مواجهه نهایی با حیدر بر سر طومار میرزا روشن',
+    type: 'object_interaction',
+    act: 3,
+    description: 'ارائه طومار محرمانه و افشای نقشه ماهیان هفت‌گانه برای شکستن سکوت و ترس حیدر.',
+    targetObjectId: 'npc_heydar_bridge',
+    requiredItemId: 'opened_fish_cylinder',
+    successNotice: 'مقاومت حیدر در هم شکست و نقشه میرزا روشن افشا شد!',
+    evidenceToUnlock: 'ev_act3_heydar_fear_confession',
+    flagsToSet: {
+      heydar_fully_confessed: true,
+      heydar_bridge_cleared: true,
+    },
+    inspectModal: {
+      title: 'اعتراف تکان‌دهنده حیدرِ پل',
+      description: 'حیدر با دیدن مهر میرزا روشن سرش را میان دست‌هایش گرفت و به گریه افتاد: «من فقط کلیددار بودم... گفتن اگر کابل رو نکشی، بچه‌هات رو سر به نیست می‌کنیم! اون شب هفتمین ماهی کابل رو برید و رفت سمت آسیاب...»',
+      subtext: 'خانخله: «آسوده باش مرد، تو فقط طعمه بودی؛ سر این اژدها توی دارالخلافه نشسته و اسمش میرزا روشنه!»',
+    },
+    isSolved: (state) => !!state.puzzleFlags['heydar_fully_confessed'],
+  } as ObjectInteractionPuzzle,
 };

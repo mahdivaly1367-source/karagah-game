@@ -682,4 +682,468 @@ export const OBJECT_INTERACTIONS: Record<string, ObjectInteractionDef> = {
     role: 'Navigation',
     changesScene: 'yaqub_courtyard',
   },
+
+  // -------------------------------------------------------------
+  // ACT 3: OLD BRIDGE (پل سنگی قدیمی)
+  // -------------------------------------------------------------
+  npc_heydar_bridge: {
+    objectId: 'npc_heydar_bridge',
+    role: 'Character Interaction',
+    startsDialogue: {
+      npcId: 'heydar',
+      nodeId: 'heydar_root',
+    },
+  },
+
+  obj_bridge_parapet: {
+    objectId: 'obj_bridge_parapet',
+    role: 'Evidence',
+    discoversEvidence: 'ev_act3_underbridge_wire_cable',
+    inspectModal: {
+      title: 'کنگره‌های سنگی پل و سایش کابل',
+      description: 'لبه سنگ‌های تراش‌خورده پل دچار خوردگی و سایش عمیق ناشی از کشیده شدن کابل‌های فلزی سنگین شده است. کسی بارهای سنگین را با کابل از آب بالا می‌کشیده است.',
+      subtext: 'خانخله: «این سایش کار دیروز و امروز نیست؛ ماه‌هاست که شبانه بار از این آب بالا می‌کشیدن!»',
+    },
+  },
+
+  obj_heydar_lantern: {
+    objectId: 'obj_heydar_lantern',
+    role: 'Lore',
+    inspectModal: {
+      title: 'فانوس دودزده دیده‌بان',
+      description: 'فانوس برنجی سنگین که بوی پیه گرگ و روغن چرخ از آن بلند می‌شود.',
+      subtext: 'خانخله: «فانوس روشنه، یعنی دیده‌بان تمام شب بیدار بوده و همه‌چیز رو دیده!»',
+    },
+  },
+
+  path_bridge_to_under: {
+    objectId: 'path_bridge_to_under',
+    role: 'Navigation',
+    changesScene: 'under_bridge',
+  },
+
+  path_bridge_to_checkpoint: {
+    objectId: 'path_bridge_to_checkpoint',
+    role: 'Navigation',
+    changesScene: 'road_checkpoint',
+  },
+
+  path_bridge_to_river: {
+    objectId: 'path_bridge_to_river',
+    role: 'Navigation',
+    changesScene: 'river_bank',
+  },
+
+  // -------------------------------------------------------------
+  // ACT 3: UNDER BRIDGE (زیر طاق‌های پل سنگی)
+  // -------------------------------------------------------------
+  obj_underbridge_winch: {
+    objectId: 'obj_underbridge_winch',
+    role: 'Puzzle',
+    handler: (state: GameState) => {
+      const hasHandle = state.inventory.includes('winch_crank_handle');
+      const isRepaired = !!state.puzzleFlags.winch_repaired;
+
+      if (isRepaired) {
+        return {
+          inspectModal: {
+            title: 'وینچ راه‌اندازی‌شده زیر پل',
+            description: 'دسته چدنی در جای خود محکم شده و کابل‌های فولادی بیرون کشیده شده‌اند. محل صید پنهان شمش‌ها کاملاً آشکار است.',
+            subtext: 'خانخله: «دستگاه آماده است؛ فقط باید اعتراف حیدر رو بگیریم.»',
+          }
+        };
+      }
+
+      if (hasHandle) {
+        return {
+          stateUpdates: {
+            inventory: state.inventory.filter(id => id !== 'winch_crank_handle'),
+            puzzleFlags: {
+              ...state.puzzleFlags,
+              winch_repaired: true,
+              underbridge_mechanism_revealed: true,
+            },
+            evidence: {
+              ...state.evidence,
+              ev_act3_underbridge_wire_cable: true,
+            },
+            inspectModal: {
+              title: 'راه‌اندازی وینچ و بالا کشیدن کابل‌ها',
+              description: 'دسته چدنی را در محور پیچاندی و با صدای غرش چرخ‌دنده‌ها، کابل‌های بافته فولادی و سبد فلزی از عمق گرداب بیرون کشیده شد!',
+              subtext: 'خانخله: «این تور صید نهنگه نه ماهی قزل‌آلا! ایستگاه بارگیری سرّی زیر پایه‌های پل کشف شد!»',
+            }
+          },
+          toastMessage: 'وینچ راه اندازی شد و کابل‌های فولادی بالا کشیده شدند!',
+          playEvidenceSound: true,
+        };
+      }
+
+      return {
+        inspectModal: {
+          title: 'وینچ چدنی بدون دسته',
+          description: 'محور وینچ سنگین زیر پل بدون دسته چدنی خود قفل شده است. دسته گرداننده باید در حوالی پاسگاه یا انبارهای اطراف باشد.',
+          subtext: 'خانخله: «بدون اهرم نمی‌شه چرخ‌دنده‌ها رو گردوند؛ باید دسته رو پیدا کنم.»',
+        }
+      };
+    },
+  },
+
+  obj_bridge_arches_chain: {
+    objectId: 'obj_bridge_arches_chain',
+    role: 'Evidence',
+    discoversEvidence: 'ev_act3_underbridge_wire_cable',
+    inspectModal: {
+      title: 'کابل‌های معلق در آب خروشان',
+      description: 'رشته‌های کابل سیمی بافته‌شده و تسمه‌های بارکش که به پایه‌های سنگی زیر پل متصل شده‌اند.',
+      subtext: 'خانخله: «این تور صید نهنگه نه قزل‌آلا! زیر پایه‌های پل ایستگاه بارگیری سرّی ساخته بودن!»',
+    },
+  },
+
+  obj_heydar_toolbox: {
+    objectId: 'obj_heydar_toolbox',
+    role: 'Item',
+    givesItem: 'heydar_wire_fragment',
+    itemPickupNotice: 'تکه سیم بافته‌شده فولادی از جعبه ابزار حیدر برداشته شد!',
+    inspectModal: {
+      title: 'جعبه ابزار فلزی حیدر',
+      description: 'تکه‌های سیم فولادی بریده‌شده با همان بافت کابل‌های زیر پل.',
+      subtext: 'خانخله: «دقیقاً همان آلیاژ سیمی که به وینچ بسته شده؛ حیدر خودش کابل‌ها رو تعمیر می‌کرده!»',
+    },
+  },
+
+  path_under_to_bridge: {
+    objectId: 'path_under_to_bridge',
+    role: 'Navigation',
+    changesScene: 'old_bridge',
+  },
+
+  path_under_to_river: {
+    objectId: 'path_under_to_river',
+    role: 'Navigation',
+    changesScene: 'river_bank',
+  },
+
+  // -------------------------------------------------------------
+  // ACT 3: RIVER BANK (کناره و ساحل رودخانه)
+  // -------------------------------------------------------------
+  obj_river_current_whirlpool: {
+    objectId: 'obj_river_current_whirlpool',
+    role: 'Puzzle',
+    handler: (state: GameState) => {
+      const hasFloat = state.inventory.includes('water_plummet_float');
+      const isCalculated = !!state.puzzleFlags.river_flow_calculated;
+
+      if (isCalculated) {
+        return {
+          inspectModal: {
+            title: 'خط سیر اثبات‌شده گرداب و آبراهه',
+            description: 'مسیر حرکت آب از ناودانی انبار بالادست شروع شده، به زیر پل می‌رسد و سپس مستقیماً به دریچه آبگیر آسیاب ماه‌نگار می‌ریزد.',
+            subtext: 'خانخله: «هیدرولیک کویر هیچ دروغی رو پنهان نمی‌کنه!»',
+          }
+        };
+      }
+
+      if (hasFloat) {
+        return {
+          stateUpdates: {
+            inventory: state.inventory.filter(id => id !== 'water_plummet_float'),
+            puzzleFlags: {
+              ...state.puzzleFlags,
+              river_flow_calculated: true,
+            },
+            evidence: {
+              ...state.evidence,
+              ev_act3_river_drift_calculation: true,
+            },
+            inspectModal: {
+              title: 'ردگیری مسیر جریان با شناور شاغول‌دار',
+              description: 'شناور شاغول‌دار در خط اصلی گرداب رها شد. آب آن را شتابان از زیر طاق میانی پل به سمت دریچه آبگیر سنگ‌آسیاب ماه‌نگار کشاند!',
+              subtext: 'خانخله: «همه چیز مثل زنجیر به هم وصله؛ استوانه‌ای که از تور در رفته، مستقیم رفته لای پره‌های آسیاب!»',
+            }
+          },
+          toastMessage: 'مسیر جریان هیدرولیکی رودخانه کشف و اثبات شد!',
+          playEvidenceSound: true,
+        };
+      }
+
+      return {
+        inspectModal: {
+          title: 'گرداب تند صخره‌های ساحلی',
+          description: 'آب با شتاب زیاد می‌چرخد. برای فهمیدن مسیر دقیق حرکت اشیا در این عمق، به یک شناور یا شاغول صیادی نیاز داری.',
+          subtext: 'خانخله: «عمو صفر ماهیگیر حتماً ابزار مناسبی برای رصد جریان آب داره.»',
+        }
+      };
+    },
+  },
+
+  obj_river_reeds_driftwood: {
+    objectId: 'obj_river_reeds_driftwood',
+    role: 'Lore',
+    inspectModal: {
+      title: 'نیزارهای وحشی و کنده گیرکرده',
+      description: 'نی‌های بلند و گل‌آلود ساحل که رد آب‌بردگی اجسام را نشان می‌دهند.',
+      subtext: 'خانخله: «رد آب همه چیز رو شسته، اما خط جریان به سمت آسیاب میره.»',
+    },
+  },
+
+  path_river_to_hut: {
+    objectId: 'path_river_to_hut',
+    role: 'Navigation',
+    changesScene: 'fisherman_hut',
+  },
+
+  path_river_to_mill: {
+    objectId: 'path_river_to_mill',
+    role: 'Navigation',
+    changesScene: 'water_mill',
+  },
+
+  path_river_to_bridge: {
+    objectId: 'path_river_to_bridge',
+    role: 'Navigation',
+    changesScene: 'old_bridge',
+  },
+
+  // -------------------------------------------------------------
+  // ACT 3: FISHERMAN HUT (کلبه عمو صفر ماهیگیر)
+  // -------------------------------------------------------------
+  npc_safar_fisherman: {
+    objectId: 'npc_safar_fisherman',
+    role: 'Character Interaction',
+    startsDialogue: {
+      npcId: 'safar',
+      nodeId: 'safar_root',
+    },
+  },
+
+  obj_safar_fish_nets: {
+    objectId: 'obj_safar_fish_nets',
+    role: 'Evidence',
+    discoversEvidence: 'ev_act3_safar_fish_reality',
+    inspectModal: {
+      title: 'تورهای کهنه کنفی ماهیگیر',
+      description: 'تورهای سنتی و سبک صیادی با منافذ درشت نخی؛ کاملاً متفاوت با سیم‌های صنعتی زیر پل!',
+      subtext: 'خانخله: «تور واقعی صیادی اینه! نه سیم بوکسل فولادی حیدرِ پل!»',
+    },
+  },
+
+  obj_safar_plummet: {
+    objectId: 'obj_safar_plummet',
+    role: 'Item',
+    givesItem: 'water_plummet_float',
+    itemPickupNotice: 'شناور شاغول‌دار عمو صفر برداشته شد!',
+    inspectModal: {
+      title: 'شناور شاغول‌دار صیاد',
+      description: 'ابزار سنتی برای ردگیری جریان عمقی آب و یافتن گرداب‌ها.',
+      subtext: 'خانخله: «با این شناور می‌تونیم دقیقاً ببینیم آب چی رو تا کجا می‌بره!»',
+    },
+  },
+
+  door_hut_to_river: {
+    objectId: 'door_hut_to_river',
+    role: 'Navigation',
+    changesScene: 'river_bank',
+  },
+
+  // -------------------------------------------------------------
+  // ACT 3: WATER MILL (آسیاب آبی ماه‌نگار)
+  // -------------------------------------------------------------
+  npc_mahnegar_mill: {
+    objectId: 'npc_mahnegar_mill',
+    role: 'Character Interaction',
+    startsDialogue: {
+      npcId: 'mahnegar',
+      nodeId: 'mahnegar_root',
+    },
+  },
+
+  obj_mill_waterwheel: {
+    objectId: 'obj_mill_waterwheel',
+    role: 'Evidence',
+    discoversEvidence: 'ev_act3_mill_jam_record',
+    inspectModal: {
+      title: 'پره چوبی شکسته چرخ آسیاب',
+      description: 'اثر برخورد جسم سنگین فلزی در ساعت دو بامداد بر پره بلوطی چرخ به وضوح پیداست.',
+      subtext: 'خانخله: «ضربه مهیب یک جسم سربی سنگین؛ ساعت دقیقاً دو بامداد ثبت شده!»',
+    },
+  },
+
+  obj_mill_sluice_gate: {
+    objectId: 'obj_mill_sluice_gate',
+    role: 'Item',
+    givesItem: 'zinc_fish_cylinder',
+    discoversEvidence: 'ev_act3_zinc_fish_cylinder',
+    itemPickupNotice: 'استوانه رویین شمش‌ها (ماهی فلزی) از لجن‌گیر آسیاب خارج شد!',
+    inspectModal: {
+      title: 'استوانه رویین ممهور',
+      description: 'استوانه فلزی ضدآب با موم سرخ درباری و نقش مهر دیوان سلطنتی.',
+      subtext: 'خانخله: «این همون ماهی پرنده حیدره! استوانه‌ای برای غوطه‌ور ساختن شمش‌های طلا در آب!»',
+    },
+  },
+
+  path_mill_to_river: {
+    objectId: 'path_mill_to_river',
+    role: 'Navigation',
+    changesScene: 'river_bank',
+  },
+
+  path_mill_to_warehouse: {
+    objectId: 'path_mill_to_warehouse',
+    role: 'Navigation',
+    changesScene: 'abandoned_warehouse',
+  },
+
+  // -------------------------------------------------------------
+  // ACT 3: ROAD CHECKPOINT (پاسگاه راه و راه‌بند)
+  // -------------------------------------------------------------
+  npc_bahram_guard: {
+    objectId: 'npc_bahram_guard',
+    role: 'Character Interaction',
+    startsDialogue: {
+      npcId: 'bahram',
+      nodeId: 'bahram_root',
+    },
+  },
+
+  npc_gholi_runner: {
+    objectId: 'npc_gholi_runner',
+    role: 'Character Interaction',
+    startsDialogue: {
+      npcId: 'gholi',
+      nodeId: 'gholi_root',
+    },
+  },
+
+  obj_patrol_logbook: {
+    objectId: 'obj_patrol_logbook',
+    role: 'Evidence',
+    discoversEvidence: 'ev_act3_bahram_patrol_log',
+    inspectModal: {
+      title: 'دفتر وقایع رسمی پاسگاه',
+      description: 'گزارش رسمی نایب بهرام که با ادعای سکوت و آرامش مطلق در ساعت دو بامداد ثبت شده است.',
+      subtext: 'خانخله: «وقتی همه جا بلوا بوده، نایب نوشته هیچ صدایی نیامده! دستش با دزدها تو یه کاسه است!»',
+    },
+  },
+
+  obj_patrol_sacks: {
+    objectId: 'obj_patrol_sacks',
+    role: 'Item',
+    givesItem: 'winch_crank_handle',
+    itemPickupNotice: 'دسته آهنی وینچ پل در زیر گونی‌های پاسگاه کشف شد!',
+    inspectModal: {
+      title: 'دسته آهنی وینچ زیر گونی‌ها',
+      description: 'اهرم چدنی گرداننده چرخ‌دنده‌های وینچ زیر پل که نایب بهرام آن را پنهان کرده بود.',
+      subtext: 'خانخله: «مچت باز شد نایب! دسته وینچ رو اینجا قایم کردی تا کسی نتونه کابل‌ها رو بالا بکشه!»',
+    },
+  },
+
+  obj_bahram_cupboard: {
+    objectId: 'obj_bahram_cupboard',
+    role: 'Evidence',
+    discoversEvidence: 'ev_act3_bahram_bribe_toman',
+    inspectModal: {
+      title: 'گنجه مخفی نایب بهرام',
+      description: 'کیسه‌های حاوی سکه‌های اشرفی نو با مهر دیوان که رشوه چشم‌پوشی نایب بهرام بوده است.',
+      subtext: 'خانخله: «حق‌السکوت نایب بهرام برای بستن چشم‌هاش روی غارت شبانه!»',
+    },
+  },
+
+  path_checkpoint_to_bridge: {
+    objectId: 'path_checkpoint_to_bridge',
+    role: 'Navigation',
+    changesScene: 'old_bridge',
+  },
+
+  path_checkpoint_to_warehouse: {
+    objectId: 'path_checkpoint_to_warehouse',
+    role: 'Navigation',
+    changesScene: 'abandoned_warehouse',
+  },
+
+  // -------------------------------------------------------------
+  // ACT 3: ABANDONED WAREHOUSE (انبار متروک کاروان)
+  // -------------------------------------------------------------
+  obj_warehouse_camel_blanket: {
+    objectId: 'obj_warehouse_camel_blanket',
+    role: 'Item',
+    givesItem: 'red_camel_blanket_scrap',
+    discoversEvidence: 'ev_act3_warehouse_camels_harness',
+    itemPickupNotice: 'نمد پشمی با داغ شتران سرخ کاروانسرا کشف شد!',
+    inspectModal: {
+      title: 'نمد پشمی شتران سرخ',
+      description: 'تکه نمدی با داغ هفت ستاره کاروانسرای ریگستان که نشان می‌دهد شتران مستقیماً به این انبار آورده شده‌اند.',
+      subtext: 'خانخله: «شترها هرگز ناپدید نشدن؛ یک‌راست اومدن به این انبار تا بارهاشون به آب ریخته بشه!»',
+    },
+  },
+
+  obj_warehouse_culvert_stone: {
+    objectId: 'obj_warehouse_culvert_stone',
+    role: 'Evidence',
+    discoversEvidence: 'ev_act3_secret_culvert_hatch',
+    inspectModal: {
+      title: 'دریچه ناودانی سنگی به رودخانه',
+      description: 'آبراهه شیب‌دار زیر سنگ کف که شمش‌ها و استوانه‌ها را مستقیماً به جریان تند آب هدایت می‌کرده است.',
+      subtext: 'خانخله: «بارها رو از اینجا سُر می‌دادن تو آبراهه تند، تا با جریان آب برسه زیر پل و تو تور حیدر بیفته!»',
+    },
+  },
+
+  obj_warehouse_crates: {
+    objectId: 'obj_warehouse_crates',
+    role: 'Lore',
+    inspectModal: {
+      title: 'صندوق‌های چوبی خالی شکسته',
+      description: 'صندوق‌هایی مشابه آنچه در کاروانسرا بود، اما اینجا در انبار تخلیه و به آب ریخته شده‌اند.',
+      subtext: 'خانخله: «صندوق‌های سنگین قلابی در کاروانسرا موندن، و بار اصلی اینجا تو آب غوطه‌ور شده!»',
+    },
+  },
+
+  obj_warehouse_reconstruction_spot: {
+    objectId: 'obj_warehouse_reconstruction_spot',
+    role: 'Puzzle',
+    handler: (state: GameState) => {
+      // Check if all 4 Act 3 contradictions are resolved and evidence collected
+      const c1 = !!state.storyFlags.heydar_fish_lie_exposed;
+      const c2 = !!state.storyFlags.underbridge_mechanism_revealed;
+      const c3 = !!state.storyFlags.bahram_log_falsification_exposed;
+      const c4 = !!state.storyFlags.gholi_prank_debunked;
+      const confessed = !!state.storyFlags.heydar_fully_confessed;
+
+      const solvedCount = [c1, c2, c3, c4].filter(Boolean).length;
+
+      if (solvedCount < 4 || !confessed) {
+        return {
+          inspectModal: {
+            title: 'میز بازسازی شواهد پرونده حیدرِ پل',
+            description: `برای تکمیل بازسازی و اثبات کل زنجیره سرقت، باید تمام تناقض‌های پرده سوم را در دفترچه حل کنی و اعتراف حیدر را بگیری.\n\n[پیشرفت تناقض‌ها: ${solvedCount} از ۴]\n[وضعیت اعتراف حیدر: ${confessed ? 'انجام شده' : 'هنوز مقاومت می‌کند'}]`,
+            subtext: 'خانخله: «قطعات هنوز چفت نشدن؛ اول باید دهن دروغگوها رو ببندیم!»',
+          }
+        };
+      }
+
+      // Ready for Act 3 Outro Climax!
+      return {
+        stateUpdates: {
+          currentScene: 'act3_outro',
+          storyFlags: {
+            ...state.storyFlags,
+            act3_completed: true,
+          },
+        },
+        toastMessage: 'پرونده حیدرِ پل بسته شد! آغاز راز میرزا روشن...',
+        playEvidenceSound: true,
+      };
+    },
+  },
+
+  path_warehouse_to_mill: {
+    objectId: 'path_warehouse_to_mill',
+    role: 'Navigation',
+    changesScene: 'water_mill',
+  },
+
+  path_warehouse_to_checkpoint: {
+    objectId: 'path_warehouse_to_checkpoint',
+    role: 'Navigation',
+    changesScene: 'road_checkpoint',
+  },
 };

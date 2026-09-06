@@ -31,6 +31,7 @@ import { IntroCinematic } from './components/GameCanvas/IntroCinematic';
 import { GameScene } from './components/GameCanvas/GameScene';
 import { OutroAct1 } from './components/GameCanvas/OutroAct1';
 import { OutroAct2 } from './components/GameCanvas/OutroAct2';
+import { OutroAct3 } from './components/GameCanvas/OutroAct3';
 import { DialogueBox } from './components/Dialogue/DialogueBox';
 import { InventoryBar } from './components/Inventory/InventoryBar';
 import { InspectModal } from './components/Inventory/InspectModal';
@@ -592,7 +593,7 @@ export default function App() {
             }));
           }}
           onContinue={(slotData) => {
-            const restoredAct = typeof slotData.state.act === 'number' ? slotData.state.act : (slotData.state.storyFlags?.act2_started ? 2 : 1);
+            const restoredAct = typeof slotData.state.act === 'number' ? slotData.state.act : (slotData.state.storyFlags?.act3_started ? 3 : slotData.state.storyFlags?.act2_started ? 2 : 1);
             setGameState(prev => ({
               ...prev,
               act: restoredAct,
@@ -662,6 +663,19 @@ export default function App() {
       ) : gameState.currentScene === 'act2_outro' ? (
         /* 4. Outro Climax Act 2 */
         <OutroAct2
+          onStartAct3={() => {
+            soundManager.playDoorCreak();
+            setGameState(prev => {
+              const nextState: GameState = {
+                ...prev,
+                currentScene: 'old_bridge',
+                act: 3,
+                storyFlags: { ...prev.storyFlags, act3_started: true },
+              };
+              autoSave(nextState);
+              return nextState;
+            });
+          }}
           onReturnToMenu={() => {
             soundManager.playClick();
             setGameState(prev => ({ ...prev, isMenuOpen: true }));
@@ -672,6 +686,25 @@ export default function App() {
               const nextState: GameState = {
                 ...prev,
                 currentScene: 'bazaar',
+              };
+              autoSave(nextState);
+              return nextState;
+            });
+          }}
+        />
+      ) : gameState.currentScene === 'act3_outro' ? (
+        /* 5. Outro Climax Act 3 */
+        <OutroAct3
+          onReturnToMenu={() => {
+            soundManager.playClick();
+            setGameState(prev => ({ ...prev, isMenuOpen: true }));
+          }}
+          onExplore={() => {
+            soundManager.playClick();
+            setGameState(prev => {
+              const nextState: GameState = {
+                ...prev,
+                currentScene: 'old_bridge',
               };
               autoSave(nextState);
               return nextState;

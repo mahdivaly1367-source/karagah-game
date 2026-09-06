@@ -11,7 +11,16 @@ export type SceneId =
   | 'yaqub_house'
   | 'yaqub_courtyard'
   | 'qanat_entrance'
-  | 'act2_outro';
+  | 'act2_outro'
+  // Act 3
+  | 'old_bridge'
+  | 'under_bridge'
+  | 'river_bank'
+  | 'fisherman_hut'
+  | 'water_mill'
+  | 'road_checkpoint'
+  | 'abandoned_warehouse'
+  | 'act3_outro';
 
 export type CursorType = 'default' | 'inspect' | 'talk' | 'take' | 'use' | 'move' | 'combine';
 
@@ -78,7 +87,7 @@ export interface DialogueNode {
   id: string;
   speaker: string;
   speakerTitle?: string;
-  portraitKey: 'khan' | 'kazem' | 'nemat' | 'morteza' | 'yaqub' | 'sadiq' | 'qasem' | 'mahbanoo';
+  portraitKey: 'khan' | 'kazem' | 'nemat' | 'morteza' | 'yaqub' | 'sadiq' | 'qasem' | 'mahbanoo' | 'heydar' | 'safar' | 'mahnegar' | 'bahram' | 'gholi';
   text: string;
   options: DialogueOption[];
   onEnter?: (state: GameState) => Partial<GameState> | void;

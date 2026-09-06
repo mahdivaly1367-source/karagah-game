@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { soundManager } from '../../systems/audio/soundManager';
-import { Sparkles, ScrollText, RotateCcw, Home, Compass } from 'lucide-react';
+import { Sparkles, ScrollText, RotateCcw, Home, Compass, ArrowRight } from 'lucide-react';
 
 interface OutroAct2Props {
   onReturnToMenu: () => void;
   onExplore: () => void;
+  onStartAct3?: () => void;
 }
 
-export const OutroAct2: React.FC<OutroAct2Props> = ({ onReturnToMenu, onExplore }) => {
+export const OutroAct2: React.FC<OutroAct2Props> = ({ onReturnToMenu, onExplore, onStartAct3 }) => {
   const [step, setStep] = useState(0);
 
   useEffect(() => {
@@ -103,6 +104,15 @@ export const OutroAct2: React.FC<OutroAct2Props> = ({ onReturnToMenu, onExplore 
           </p>
 
           <div className="pt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+            {onStartAct3 && (
+              <button
+                onClick={onStartAct3}
+                className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-stone-950 font-black text-sm md:text-base flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(16,185,129,0.4)] transition-all"
+              >
+                <span>آغاز پرده سوم: حیدرِ پل</span>
+                <ArrowRight className="w-5 h-5 rotate-180" />
+              </button>
+            )}
             <button
               onClick={onReturnToMenu}
               className="w-full sm:w-auto px-7 py-3 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-stone-950 font-black text-sm md:text-base flex items-center justify-center gap-2 shadow-2xl transition-all"

@@ -237,4 +237,155 @@ export const GAME_CONTRADICTIONS: Record<string, Contradiction> = {
       },
     },
   },
+
+  // Act 3 Contradictions
+  // 1. Heydar's "Jumping Fish" vs Safar's Winter Biology Reality
+  contra_act3_heydar_fish_vs_safar: {
+    id: 'contra_act3_heydar_fish_vs_safar',
+    act: 3,
+    name: 'تناقض ماهی پرنده حیدر با واقعیت زمستان رودخانه',
+    statementA: {
+      speaker: 'حیدرِ پل',
+      speakerTitle: 'دیده‌بان پل',
+      text: 'نیمه‌شب سر و صدایی بلند شد... یه ماهی بزرگ، مثل دیو از توی تور پرید بیرون و رفت ته آب! من فقط همین رو دیدم.',
+      sourceContext: 'گفتگو با حیدر بر فراز پل',
+      sourceEvidenceId: 'ev_act3_heydar_testimony',
+    },
+    statementB: {
+      title: 'شهادت عمو صفر ماهیگیر',
+      text: 'در این سرمای استخوان‌سوز، تمام ماهیان رودخانه در لجن‌های عمیق کف به خواب رفته‌اند و هیچ ماهی جهنده‌ای وجود ندارد.',
+      sourceContext: 'تحلیل ماهیگیری عمو صفر در کلبه ساحلی',
+      sourceEvidenceId: 'ev_act3_safar_fish_reality',
+    },
+    contradictionDescription: 'حیدر برای پوشاندن صدای فرار محموله قاچاق، داستان خنده‌دار پریدن ماهی بزرگ را سرهم کرده است.',
+    requiredEvidenceIds: ['ev_act3_heydar_testimony', 'ev_act3_safar_fish_reality'],
+    isAvailable: (state) => !!state.evidence['ev_act3_heydar_testimony'] && !!state.evidence['ev_act3_safar_fish_reality'],
+    isResolved: (state) => !!state.storyFlags['heydar_fish_lie_exposed'],
+    resolution: {
+      flagsToSet: {
+        heydar_fish_lie_exposed: true,
+      },
+      reactionText: 'حیدر آب دهانش را به سختی قورت داد و کلاه نمدی‌اش را پایین کشید. لرزش دستانش دیگر پنهان‌کردنی نبود.',
+      subtext: 'خانخله: «حیدرخان! ماهی کویر در این چله زمستان بال درنمیاره! بگو ببینم اون چیزی که از تور سیمی‌ات در رفت چقدر وزن داشت؟»',
+      journalEntry: {
+        id: 'journal_contra_heydar_fish',
+        category: 'people',
+        title: 'رد ادعای پریدن ماهی حیدر',
+        content: 'با گواهی عمو صفر، ادعای پریدن ماهی بزرگ رد شد. حیدر چیزی مصنوعی و بسیار سنگین را در تور خود از دست داده است.',
+        timestamp: 'پرده سوم',
+      },
+    },
+  },
+
+  // 2. Heydar's Hemp Net Claim vs Heavy Steel Wire & Pulley
+  contra_act3_net_wire_vs_hemp: {
+    id: 'contra_act3_net_wire_vs_hemp',
+    act: 3,
+    name: 'تناقض تور کهنه کنفی با کابل‌های فولادی وینچ',
+    statementA: {
+      speaker: 'حیدرِ پل',
+      text: 'طناب‌های زیر طاق فقط یه تور نخ‌نمای کنفی برای گرفتن آشغال و ماهی‌های مرده بود که آب با خودش می‌آورد.',
+      sourceContext: 'انکار تجهیزات مکانیکی توسط حیدر',
+      sourceEvidenceId: 'ev_act3_hemp_net_claim',
+    },
+    statementB: {
+      title: 'کابل‌های بافته فولادی و وینچ چدنی',
+      text: 'زیر طاق پل، کابل‌های قطور فولادی و قرقره‌های دندانه‌دار با گریس تازه وجود دارند که ویژه مهار و کشیدن اجسام سنگین چندصد منی تعبیه شده‌اند.',
+      sourceContext: 'بررسی فیزیکی زیر طاق پل',
+      sourceEvidenceId: 'ev_act3_underbridge_wire_cable',
+    },
+    contradictionDescription: 'حیدر تلاش کرد شبکه مکانیکی پیشرفته صید بارهای قاچاق را به عنوان یک تور ماهیگیری پوسیده جا بزند.',
+    requiredEvidenceIds: ['ev_act3_hemp_net_claim', 'ev_act3_underbridge_wire_cable'],
+    isAvailable: (state) => !!state.evidence['ev_act3_hemp_net_claim'] && !!state.evidence['ev_act3_underbridge_wire_cable'],
+    isResolved: (state) => !!state.storyFlags['underbridge_mechanism_revealed'],
+    resolution: {
+      flagsToSet: {
+        underbridge_mechanism_revealed: true,
+      },
+      reactionText: 'حیدر به کابل فولادی در دستان خانخله خیره شد و با صدای گرفته گفت: «این... این رو میرزا برام فرستاده بود... مجبورم کردن!»',
+      subtext: 'خانخله: «تور کنفی با کابل فولادی روسی؟! کلک آب خنک نخوردی تا بدونی چرخ‌دنده برای ماهی قزل‌آلا نمی‌گذارن!»',
+      journalEntry: {
+        id: 'journal_contra_net_wire',
+        category: 'evidence',
+        title: 'کشف مکانیزم وینچ زیر پل',
+        content: 'ثابت شد زیر پل یک ایستگاه پنهان دریافت بار با کابل‌های فولادی تعبیه شده که محموله‌ها را مستقیماً از آب می‌گرفته است.',
+        timestamp: 'پرده سوم',
+      },
+    },
+  },
+
+  // 3. Nayeb Bahram's Peaceful Log vs Mill Jam at 02:00 AM
+  contra_act3_checkpoint_peace_vs_mill_jam: {
+    id: 'contra_act3_checkpoint_peace_vs_mill_jam',
+    act: 3,
+    name: 'تناقض سکوت شبانه پاسگاه با فاجعه ساعت دو بامداد آسیاب',
+    statementA: {
+      speaker: 'نایب بهرام',
+      speakerTitle: 'مأمور قراولخانه',
+      text: 'ساعت دو بامداد، جاده و پل در آرامش کامل بود. پشه هم پر نمی‌زد و هیچ باری از این معبر تکان نخورد.',
+      sourceContext: 'دفتر رسمی وقایع پاسگاه',
+      sourceEvidenceId: 'ev_act3_bahram_patrol_log',
+    },
+    statementB: {
+      title: 'توقف خردکننده چرخ آسیاب در ساعت دو',
+      text: 'ماه‌نگار ثبت کرده که درست در ساعت دو بامداد، برخورد پرتابه سنگین فلزی در کانال آب، چرخ ده‌تنی آسیاب را متوقف کرد.',
+      sourceContext: 'گواهی ماه‌نگار در آسیاب آبی',
+      sourceEvidenceId: 'ev_act3_mill_jam_record',
+    },
+    contradictionDescription: 'نایب بهرام با جعل دفتر پاسگاه وانمود کرده شب آرامی بوده، در حالی که در همان لحظه عملیات انتقال بار در آب فاجعه آفریده بود.',
+    requiredEvidenceIds: ['ev_act3_bahram_patrol_log', 'ev_act3_mill_jam_record'],
+    isAvailable: (state) => !!state.evidence['ev_act3_bahram_patrol_log'] && !!state.evidence['ev_act3_mill_jam_record'],
+    isResolved: (state) => !!state.storyFlags['bahram_log_falsification_exposed'],
+    resolution: {
+      flagsToSet: {
+        bahram_log_falsification_exposed: true,
+      },
+      reactionText: 'نایب بهرام به تندی دست به قبضه شمشیر برد، اما برق نگاه مأمورانه و خونسرد خانخله او را سر جایش میخکوب کرد.',
+      subtext: 'خانخله: «جناب نایب! چرخ آسیاب ماه‌نگار از شدت صدای تق‌تق ساعت دو خرد شد، اما در دفتر شما صدای سنجاقک هم ثبت نشده! قلمت چقدر مزد گرفته بود؟»',
+      journalEntry: {
+        id: 'journal_contra_bahram_mill',
+        category: 'people',
+        title: 'رسوایی جعل دفتر وقایع پاسگاه',
+        content: 'همزمانی دقیق توقف پره‌های آسیاب با ثبت آرامش کذایی پاسگاه، همدستی و رشوه گرفتن نایب بهرام را فاش کرد.',
+        timestamp: 'پرده سوم',
+      },
+    },
+  },
+
+  // 4. Gholi's Childish Prank vs Sealed Zinc Torpedo Cylinder
+  contra_act3_gholi_toy_vs_zinc_cylinder: {
+    id: 'contra_act3_gholi_toy_vs_zinc_cylinder',
+    act: 3,
+    name: 'تناقض بازی چوب قلی با استوانه رویین ممهور',
+    statementA: {
+      speaker: 'قلی پادو',
+      text: 'من فقط چوب خشک می‌انداختم تو آبراه انبار تا ببینم کدوم سریع‌تر می‌رسه زیر پل! بازی بچه‌گونه بود آقا!',
+      sourceContext: 'توجیه کودکانه قلی در ساحل',
+      sourceEvidenceId: 'ev_act3_gholi_diversion_story',
+    },
+    statementB: {
+      title: 'استوانه رویین آب‌بند با موم سرخ',
+      text: 'شیء بیرون کشیده شده از آبراه آسیاب یک کپسول ضدآب رویین و سربی است که ممهور به موم سرخ سلطنتی است، نه تکه چوب خشک.',
+      sourceContext: 'استوانه دوکی کشف‌شده در آسیاب',
+      sourceEvidenceId: 'ev_act3_zinc_fish_cylinder',
+    },
+    contradictionDescription: 'قلی پول گرفته بود تا پرتاب استوانه‌های شمش به درون آبراه انبار را یک بازی کودکانه جلوه دهد.',
+    requiredEvidenceIds: ['ev_act3_gholi_diversion_story', 'ev_act3_zinc_fish_cylinder'],
+    isAvailable: (state) => !!state.evidence['ev_act3_gholi_diversion_story'] && !!state.evidence['ev_act3_zinc_fish_cylinder'],
+    isResolved: (state) => !!state.storyFlags['gholi_prank_debunked'],
+    resolution: {
+      flagsToSet: {
+        gholi_prank_debunked: true,
+      },
+      reactionText: 'قلی به گریه افتاد و دو دستی کلاه نمدی‌اش را فشرد: «آقا تو رو خدا به نایب نگید! یه آقای قدبلند با پالتوی خزدار بهم دو تا شاهی داد گفت هر کی پرسید بگو چوب‌بازی بوده!»',
+      subtext: 'خانخله: «این کپسول سربی اگر چوب خشکه، لابد کله منم قند سابیده است! بگو ببینم اون مرد با پالتوی خزدار کی بود؟»',
+      journalEntry: {
+        id: 'journal_contra_gholi_cylinder',
+        category: 'people',
+        title: 'اعتراف قلی به نقش عامل ناشناس',
+        content: 'قلی اعتراف کرد که فردی ناشناس با پالتوی خزدار به او انعام داده تا پرتاب استوانه‌های فلزی به آبراه انبار را کتمان کند.',
+        timestamp: 'پرده سوم',
+      },
+    },
+  },
 };

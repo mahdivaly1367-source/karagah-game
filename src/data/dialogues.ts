@@ -1036,5 +1036,378 @@ export const DIALOGUE_NODES: Record<string, DialogueNode> = {
         nextNodeId: undefined,
       }
     ]
+  },
+
+  // -------------------------------------------------------------
+  // ACT 3: HEYDAR (حیدرِ پل)
+  // -------------------------------------------------------------
+  heydar_root: {
+    id: 'heydar_root',
+    speaker: 'حیدرِ پل',
+    speakerTitle: 'دیده‌بان پل قدیمی',
+    portraitKey: 'heydar',
+    text: 'سلام مفتش... قدم روی این سنگ‌های یخ‌زده گذاشتی که چی بشه؟ آب گل‌آلود رودخونه که با کسی شوخی نداره. بهتره برگردی آبادی، اینجا فقط سوز سرما و غلغل آبه.',
+    options: [
+      {
+        id: 'opt_heydar_fish',
+        text: 'شنیدم دیشب وسط اون هیاهو، سر و صدای عجیبی از زیر طاق پل شنیدی. بگو چی دیدی؟',
+        nextNodeId: 'heydar_fish_node',
+      },
+      {
+        id: 'opt_heydar_net',
+        text: 'این طناب‌ها و قرقره‌های سنگین که به پایه‌های پل بستی برای چیه؟',
+        nextNodeId: 'heydar_net_node',
+      },
+      {
+        id: 'opt_heydar_confront_fish_lie',
+        text: '«حیدر! عمو صفر ماهیگیر میگه تو این سرمای گزنده، همه ماهی‌ها تو لجن خوابیدن! کدوم ماهی از تورت پرید؟»',
+        condition: (s) => !!s.storyFlags.heydar_fish_lie_exposed && !s.storyFlags.heydar_fully_confessed,
+        nextNodeId: 'heydar_fish_lie_reaction',
+      },
+      {
+        id: 'opt_heydar_confront_scroll',
+        text: '«حیدر! استوانه فلزی باز شد و طومار مهرشده میرزا روشن پیدا شد! وقت اعترافه.»',
+        condition: (s) => !!s.storyFlags.cylinder_opened && !s.storyFlags.heydar_fully_confessed,
+        nextNodeId: 'heydar_final_confession',
+      },
+      {
+        id: 'opt_heydar_leave',
+        text: 'فعلاً حواست به این پل باشه تا برگردم.',
+        nextNodeId: undefined,
+      }
+    ]
+  },
+  heydar_fish_node: {
+    id: 'heydar_fish_node',
+    speaker: 'حیدرِ پل',
+    speakerTitle: 'دیده‌بان پل قدیمی',
+    portraitKey: 'heydar',
+    text: 'چیزی نبود آقا... حدود ساعت دو بامداد، صدای شلپ‌شلوپ بلندی از وسط گرداب اومد. دویدم لبه جان‌پناه... انگار یه ماهی گنده، به هیکل یه گوساله از توی تور پرید بیرون و شیرجه زد ته آب! فقط یه ماهی پرنده بود!',
+    options: [
+      {
+        id: 'opt_heydar_fish_accept',
+        text: 'ماهی پرنده به هیکل گوساله وسط زمستان؟! سرنخ عجیبیه... باید از عمو صفر بپرسم.',
+        action: (s) => ({
+          evidence: { ...s.evidence, ev_act3_heydar_testimony: true }
+        }),
+        nextNodeId: 'heydar_root',
+      }
+    ]
+  },
+  heydar_net_node: {
+    id: 'heydar_net_node',
+    speaker: 'حیدرِ پل',
+    speakerTitle: 'دیده‌بان پل قدیمی',
+    portraitKey: 'heydar',
+    text: 'کدوم قرقره آقا؟! اینا فقط چند رشته تور کنفی پوسیده است که آویزون کردم خس و خاشاک و ماهی‌های مرده رو بگیرم تا راه آب زیر طاق‌ها مسدود نشه. چیز به درد بخوری اون زیر نیست، دست بهشون نزنید خطرناکه!',
+    options: [
+      {
+        id: 'opt_heydar_net_note',
+        text: 'می‌گی فقط تور کهنه کنفیه؟ ولی حس ششم من چیز دیگه‌ای میگه...',
+        action: (s) => ({
+          evidence: { ...s.evidence, ev_act3_hemp_net_claim: true }
+        }),
+        nextNodeId: 'heydar_root',
+      }
+    ]
+  },
+  heydar_fish_lie_reaction: {
+    id: 'heydar_fish_lie_reaction',
+    speaker: 'حیدرِ پل',
+    speakerTitle: 'دیده‌بان پل قدیمی',
+    portraitKey: 'heydar',
+    text: 'عمو صفر؟! اون پیرمرد عقلش پاره‌سنگ برمی‌داره! اصلاً من هول شدم، مه بود، تاریک بود... شاید یه کنده درخت بود که تاب می‌خورد. دست از سر من بردار مفتش، من کاره‌ای نیستم!',
+    options: [
+      {
+        id: 'opt_heydar_fish_lie_back',
+        text: 'رنگت پریده حیدر. معلومه پنهان‌کاری می‌کنی.',
+        nextNodeId: 'heydar_root',
+      }
+    ]
+  },
+  heydar_final_confession: {
+    id: 'heydar_final_confession',
+    speaker: 'حیدرِ پل',
+    speakerTitle: 'دیده‌بان پل قدیمی',
+    portraitKey: 'heydar',
+    text: 'یا غیاث‌المستغیثین... میرزا روشن! پس سند دست شما افتاد... آقا رحم کن! به پیر، به پیغمبر من دزد نیستم! شش ماه پیش آدم‌های دیوان اومدن سراغم، گفتن اگر شب‌ها وینچ رو نچرخونی و اون استوانه‌های رویین رو از آب نگیری، تک‌تک بچه‌هات رو توی چاه قنات غرق می‌کنیم! اون شب شمش هفتم زیر فشار آب کابل رو پاره کرد و از تور در رفت... حیدر بیچاره شد!',
+    options: [
+      {
+        id: 'opt_heydar_confess_end',
+        text: '«حقیقت رو گفتی حیدر. تو فقط طعمه بودی؛ آمر اصلی این جنایت میرزا روشنه.»',
+        action: (s) => ({
+          storyFlags: { ...s.storyFlags, heydar_fully_confessed: true },
+          evidence: { ...s.evidence, ev_act3_heydar_fear_confession: true, ev_act3_mirza_roshan_seal: true }
+        }),
+        nextNodeId: undefined,
+      }
+    ]
+  },
+
+  // -------------------------------------------------------------
+  // ACT 3: SAFAR (عمو صفر ماهیگیر)
+  // -------------------------------------------------------------
+  safar_root: {
+    id: 'safar_root',
+    speaker: 'عمو صفر',
+    speakerTitle: 'ماهیگیر کهنه‌کار رودخانه',
+    portraitKey: 'safar',
+    text: 'خوش اومدی به کلبه محقر صیاد. بنشین دم این اجاق گرم شو. بوی باروت و فتنه از روی پل میاد، مگه نه مفتش؟',
+    options: [
+      {
+        id: 'opt_safar_fish_query',
+        text: 'حیدرِ پل مدعیه دیشب ساعت دو، یه ماهی غول‌پیکر از تارش بیرون پریده و رفته ته آب. ممکنه؟',
+        nextNodeId: 'safar_debunk_fish',
+      },
+      {
+        id: 'opt_safar_current',
+        text: 'جریان آب رودخونه چطور می‌گرده؟ اگر چیزی توی آب بیفته کجا میره؟',
+        nextNodeId: 'safar_current_explain',
+      },
+      {
+        id: 'opt_safar_knife_gift',
+        text: '«عمو صفر، ابزاری داری که بتونم باهاش گره‌های کور و موم‌های ضخیم رو باز کنم؟»',
+        condition: (s) => !s.inventory.includes('fisherman_knife'),
+        nextNodeId: 'safar_give_knife',
+      },
+      {
+        id: 'opt_safar_leave',
+        text: 'ممنون عمو صفر، برمی‌گردم.',
+        nextNodeId: undefined,
+      }
+    ]
+  },
+  safar_debunk_fish: {
+    id: 'safar_debunk_fish',
+    speaker: 'عمو صفر',
+    speakerTitle: 'ماهیگیر کهنه‌کار رودخانه',
+    portraitKey: 'safar',
+    text: 'هاهاها! ماهی پرنده؟! حیدر یا بنگ کشیده بوده یا داره سرت کلاه می‌ذاره پسرم! پنجاه ساله من تو این آب تور می‌اندازم. تو چله زمستون، ماهیان این رود مثل سنگ کف لجن کز می‌کنن و تکون نمی‌خورن. اون چیزی که حیدر دیده اگر پرتاب شده، دست بشر پرتش کرده نه باله ماهی!',
+    options: [
+      {
+        id: 'opt_safar_debunk_done',
+        text: 'دقیقاً همون‌طور که حدس می‌زدم! حیدر دروغ گفته.',
+        action: (s) => ({
+          evidence: { ...s.evidence, ev_act3_safar_fish_reality: true }
+        }),
+        nextNodeId: 'safar_root',
+      }
+    ]
+  },
+  safar_current_explain: {
+    id: 'safar_current_explain',
+    speaker: 'عمو صفر',
+    speakerTitle: 'ماهیگیر کهنه‌کار رودخانه',
+    portraitKey: 'safar',
+    text: 'جریان آب از انبار بالادست تند و باریک میشه. از زیر طاق میانی پل رد میشه و بعد از گرداب صخره‌ها، می‌ریزه توی کانال آسیاب ماه‌نگار. اون شناور شاغول‌دار من رو از روی میز بردار، بنداز تو گرداب تا با چشم خودت خط آب رو ببینی.',
+    options: [
+      {
+        id: 'opt_safar_current_ok',
+        text: 'متشکرم، حتماً از شناور استفاده می‌کنم.',
+        nextNodeId: 'safar_root',
+      }
+    ]
+  },
+  safar_give_knife: {
+    id: 'safar_give_knife',
+    speaker: 'عمو صفر',
+    speakerTitle: 'ماهیگیر کهنه‌کار رودخانه',
+    portraitKey: 'safar',
+    text: 'این کارد استخوان‌ماهی رو بگیر. تیغه‌ش از فولاد آب‌دیده هندیه. هر چرم و موم و گره‌ای رو مثل پنبه می‌بره. مال تو باشه برای خدمت به حقیقت.',
+    options: [
+      {
+        id: 'opt_safar_take_knife',
+        text: 'دستت درد نکنه عمو صفر.',
+        action: (s) => ({
+          inventory: [...s.inventory, 'fisherman_knife'],
+        }),
+        nextNodeId: 'safar_root',
+      }
+    ]
+  },
+
+  // -------------------------------------------------------------
+  // ACT 3: MAHNEGAR (ماه‌نگار زنِ آسیاب)
+  // -------------------------------------------------------------
+  mahnegar_root: {
+    id: 'mahnegar_root',
+    speaker: 'ماه‌نگار',
+    speakerTitle: 'زنِ آسیاب',
+    portraitKey: 'mahnegar',
+    text: 'سلام خانخله. گرد آرد و زحمت آسیاب مجال آسایش نمی‌ذاره، اما خوب شد اومدی. دیشب آسیاب من رو کم مانده بود به کشتن بدن!',
+    options: [
+      {
+        id: 'opt_mahnegar_incident',
+        text: 'شنیدم دیشب سنگ‌آسیاب با صدای مهیبی از کار افتاده. چی شد ماه‌نگار خانم؟',
+        nextNodeId: 'mahnegar_incident_node',
+      },
+      {
+        id: 'opt_mahnegar_sluice',
+        text: 'دریچه آبگیر رو بررسی کردی؟ جسمی که به پره‌ها خورد کجاست؟',
+        nextNodeId: 'mahnegar_sluice_node',
+      },
+      {
+        id: 'opt_mahnegar_leave',
+        text: 'مراقب خودت باش ماه‌نگار، برمی‌گردم.',
+        nextNodeId: undefined,
+      }
+    ]
+  },
+  mahnegar_incident_node: {
+    id: 'mahnegar_incident_node',
+    speaker: 'ماه‌نگار',
+    speakerTitle: 'زنِ آسیاب',
+    portraitKey: 'mahnegar',
+    text: 'ساعت دقیقاً دو بامداد بود. با صدای ضربه‌ای مهیب مثل شلیک توپ، چرخ سنگین آسیاب با لرزشی وحشتناک ایستاد! شوهرم مرحومم می‌گفت وقتی سنگ بایسته انگار قلب آسیاب وایساده. رفتم پای کانال دیدم پره چوبی بلوط خرد شده و یه شیء براق و سنگین لای لجن‌گیر گیر افتاده!',
+    options: [
+      {
+        id: 'opt_mahnegar_record_note',
+        text: 'ساعت دو بامداد! یعنی دقیقاً همون ساعتی که پاسگاه نوشته آرامش مطلق بوده!',
+        action: (s) => ({
+          evidence: { ...s.evidence, ev_act3_mill_jam_record: true }
+        }),
+        nextNodeId: 'mahnegar_root',
+      }
+    ]
+  },
+  mahnegar_sluice_node: {
+    id: 'mahnegar_sluice_node',
+    speaker: 'ماه‌نگار',
+    speakerTitle: 'زنِ آسیاب',
+    portraitKey: 'mahnegar',
+    text: 'برو کنار دریچه آبگیر رو نگاه کن. اون شیء فلزی سنگین لای شکاف سنگ‌ها افتاده. شبیه یک ماهی استوانه‌ای فلزیه با درپوش ممهور سرخ. جرأت نکردم بازش کنم، بوی دربار و خون ازش میاد!',
+    options: [
+      {
+        id: 'opt_mahnegar_sluice_go',
+        text: 'میرم برش دارم و بررسیش می‌کنم.',
+        nextNodeId: 'mahnegar_root',
+      }
+    ]
+  },
+
+  // -------------------------------------------------------------
+  // ACT 3: NAYEB BAHRAM (نایب بهرام مأمور راه)
+  // -------------------------------------------------------------
+  bahram_root: {
+    id: 'bahram_root',
+    speaker: 'نایب بهرام',
+    speakerTitle: 'مأمور قراولخانه پاسگاه',
+    portraitKey: 'bahram',
+    text: 'کیستی مردکه؟ اینجا معبر نظامی و راه‌بند دیوانه! با اجازه کی پرسه می‌زنی؟ زودتر کارت رو بگو و راهت رو بکش برو.',
+    options: [
+      {
+        id: 'opt_bahram_log_ask',
+        text: 'آمدم دفتر وقایع دیشب پاسگاه را ببینم. تردد کاروان‌ها و بارهای شبانه چطور ثبت شده؟',
+        nextNodeId: 'bahram_log_node',
+      },
+      {
+        id: 'opt_bahram_confront_mill',
+        text: '«جناب نایب! در دفترت نوشتی ساعت دو بامداد آرامش کامل بوده، در حالی که چرخ آسیاب ماه‌نگار با ضربه شمش فلزی خرد شده!»',
+        condition: (s) => !!s.storyFlags.bahram_log_falsification_exposed,
+        nextNodeId: 'bahram_confront_reaction',
+      },
+      {
+        id: 'opt_bahram_leave',
+        text: 'فعلاً با دفترت سرگرم باش جناب نایب.',
+        nextNodeId: undefined,
+      }
+    ]
+  },
+  bahram_log_node: {
+    id: 'bahram_log_node',
+    speaker: 'نایب بهرام',
+    speakerTitle: 'مأمور قراولخانه پاسگاه',
+    portraitKey: 'bahram',
+    text: 'دفتر رسمی نظمیه است! سطر به سطرش قانون دارالخلافه است. ساعت دو بامداد من خودم شخصاً سر پست بودم؛ پشه هم تکان نخورد. راه‌ها بسته، پل خلوت و آرامش صددرصد برقرار بوده. کسی هم اگر غیر از این بگوید جایش در سیاه‌چال است!',
+    options: [
+      {
+        id: 'opt_bahram_log_register',
+        text: 'آرامش صددرصد... بگذار این ثبت رسمی کذایی را یادداشت کنم.',
+        action: (s) => ({
+          evidence: { ...s.evidence, ev_act3_bahram_patrol_log: true }
+        }),
+        nextNodeId: 'bahram_root',
+      }
+    ]
+  },
+  bahram_confront_reaction: {
+    id: 'bahram_confront_reaction',
+    speaker: 'نایب بهرام',
+    speakerTitle: 'مأمور قراولخانه پاسگاه',
+    portraitKey: 'bahram',
+    text: 'تو... تو چه کاره‌ای که به گزارش مأمور دولت خرده می‌گیری؟! آسیاب زپرتی خراب شده به پاسگاه چه مربوطه؟! اما... اگر یک کلمه از این حرف‌ها به مرکز برسه، می‌دانم چطور زبانت را ببندم مفتش!',
+    options: [
+      {
+        id: 'opt_bahram_threat_back',
+        text: 'سکه‌های توی گنجه‌ات با صدای بلندتری دارن حرف می‌زنن نایب بهرام!',
+        action: (s) => ({
+          evidence: { ...s.evidence, ev_act3_bahram_bribe_toman: true }
+        }),
+        nextNodeId: 'bahram_root',
+      }
+    ]
+  },
+
+  // -------------------------------------------------------------
+  // ACT 3: GHOLI (قلی نوجوان پادو)
+  // -------------------------------------------------------------
+  gholi_root: {
+    id: 'gholi_root',
+    speaker: 'قلی',
+    speakerTitle: 'نوجوان پادو و قاصد رودخانه',
+    portraitKey: 'gholi',
+    text: 'سلام آقا! فال می‌خوای؟ انعام داری؟ پیغام برات ببرم تا اون سر ریگستان؟ دو تا شاهی بده تا رازهای بالادست رو برات تعریف کنم!',
+    options: [
+      {
+        id: 'opt_gholi_warehouse_ask',
+        text: 'دیشب دم غروب تو انبار متروک بالادست رودخونه چکار می‌کردی قلی؟',
+        nextNodeId: 'gholi_toy_node',
+      },
+      {
+        id: 'opt_gholi_confront_cylinder',
+        text: '«قلی! استوانه فلزی ممهور از آب بیرون کشیده شد. کدوم مردی با پالتوی خزدار بهت پول داده بود این دروغ‌ها رو بگی؟»',
+        condition: (s) => !!s.storyFlags.gholi_prank_debunked,
+        nextNodeId: 'gholi_confess_reaction',
+      },
+      {
+        id: 'opt_gholi_leave',
+        text: 'برو پی کارت بچه.',
+        nextNodeId: undefined,
+      }
+    ]
+  },
+  gholi_toy_node: {
+    id: 'gholi_toy_node',
+    speaker: 'قلی',
+    speakerTitle: 'نوجوان پادو و قاصد رودخانه',
+    portraitKey: 'gholi',
+    text: 'انبار؟! وا... آقا من اصلاً کاری نداشتم! فقط چند تا چوب خشک می‌انداختم تو ناودونی سنگی انبار تا ببینم آب چقدر سریع می‌برتشون زیر پل. بازی بچه‌گونه بود به مولا!',
+    options: [
+      {
+        id: 'opt_gholi_toy_note',
+        text: 'چوب‌بازی توی انبار متروک سرد؟ حرفت مشکوکه قلی!',
+        action: (s) => ({
+          evidence: { ...s.evidence, ev_act3_gholi_diversion_story: true }
+        }),
+        nextNodeId: 'gholi_root',
+      }
+    ]
+  },
+  gholi_confess_reaction: {
+    id: 'gholi_confess_reaction',
+    speaker: 'قلی',
+    speakerTitle: 'نوجوان پادو و قاصد رودخانه',
+    portraitKey: 'gholi',
+    text: 'وای آقا تو رو قرآن نزن! اعتراف می‌کنم! دم غروب یه آقای شیک‌پوش با کلاه ماهوت و پالتوی خزدار اومد تو انبار. شترها رو آوردن اونجا، هفت تا بار سنگین رو از ناودونی سر دادن تو آب! به من دو تا سکه نقره داد گفت اگر کسی پرسید بگو چوب بازی می‌کردی! آقا من گناهی ندارم!',
+    options: [
+      {
+        id: 'opt_gholi_confess_done',
+        text: 'مردی با پالتوی خزدار... پازل داره کامل میشه قلی. آفرین که حقیقت رو گفتی.',
+        action: (s) => ({
+          storyFlags: { ...s.storyFlags, gholi_fully_confessed: true }
+        }),
+        nextNodeId: 'gholi_root',
+      }
+    ]
   }
 };
