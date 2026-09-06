@@ -30,7 +30,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             soundManager.playClick();
             onClose();
           }}
-          className="absolute top-4 left-4 p-1.5 rounded-lg bg-[#2a1b12] hover:bg-[#42291a] text-[#bda083] hover:text-white border border-[#5a3821] transition-colors"
+          className="absolute top-4 left-4 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg bg-[#2a1b12] hover:bg-[#42291a] text-[#bda083] hover:text-white border border-[#5a3821] transition-colors"
         >
           <X className="w-5 h-5" />
         </button>

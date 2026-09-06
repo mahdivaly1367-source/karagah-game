@@ -60,7 +60,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
             soundManager.playClick();
             setIsAboutOpen(true);
           }}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black/60 hover:bg-black/80 text-[#e6cfb8] hover:text-white border border-[#7a4e2e] backdrop-blur-md text-xs font-semibold transition-colors"
+          className="flex items-center gap-1.5 px-3.5 py-2 min-h-[44px] rounded-xl bg-black/60 hover:bg-black/80 text-[#e6cfb8] hover:text-white border border-[#7a4e2e] backdrop-blur-md text-xs font-semibold transition-colors"
         >
           <Info className="w-4 h-4" />
           <span>درباره بازی و شناسنامه تیم</span>

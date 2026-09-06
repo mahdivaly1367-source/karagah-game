@@ -42,7 +42,7 @@ export const InspectModal: React.FC<InspectModalProps> = ({
             soundManager.playClick();
             onClose();
           }}
-          className="absolute top-4 left-4 p-1.5 rounded-lg bg-[#2a1b12] hover:bg-[#42291a] text-[#bda083] hover:text-white border border-[#5a3821] transition-colors"
+          className="absolute top-4 left-4 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg bg-[#2a1b12] hover:bg-[#42291a] text-[#bda083] hover:text-white border border-[#5a3821] transition-colors"
         >
           <X className="w-5 h-5" />
         </button>
@@ -82,7 +82,7 @@ export const InspectModal: React.FC<InspectModalProps> = ({
                   soundManager.playClick();
                   customData.onAction?.();
                 }}
-                className="px-5 py-2 rounded-xl bg-[#b45309] hover:bg-[#d97706] text-white font-bold text-sm shadow-lg transition-all"
+                className="min-h-[44px] px-5 py-2 rounded-xl bg-[#b45309] hover:bg-[#d97706] text-white font-bold text-sm shadow-lg transition-all"
               >
                 {customData.actionLabel}
               </button>

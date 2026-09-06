@@ -36,7 +36,7 @@ export const HintModal: React.FC<HintModalProps> = ({ gameState, onClose }) => {
             soundManager.playClick();
             onClose();
           }}
-          className="absolute top-4 left-4 p-1.5 rounded-lg bg-[#2a1b12] hover:bg-[#42291a] text-[#bda083] hover:text-white border border-[#5a3821] transition-colors"
+          className="absolute top-4 left-4 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg bg-[#2a1b12] hover:bg-[#42291a] text-[#bda083] hover:text-white border border-[#5a3821] transition-colors"
         >
           <X className="w-5 h-5" />
         </button>
@@ -129,7 +129,7 @@ export const HintModal: React.FC<HintModalProps> = ({ gameState, onClose }) => {
             <div className="pt-2 flex justify-center">
               <button
                 onClick={handleUnlockNext}
-                className="px-4 py-2 rounded-xl bg-[#80421e] hover:bg-[#a35527] text-white text-xs md:text-sm font-bold flex items-center gap-1.5 shadow-md transition-all"
+                className="min-h-[44px] px-4 py-2 rounded-xl bg-[#80421e] hover:bg-[#a35527] text-white text-xs md:text-sm font-bold flex items-center gap-1.5 shadow-md transition-all"
               >
                 <span>باز کردن سطح بعدی راهنمایی ({unlockedLevel + 1})</span>
                 <ChevronDown className="w-4 h-4" />

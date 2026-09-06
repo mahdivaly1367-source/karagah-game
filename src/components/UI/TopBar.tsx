@@ -64,14 +64,14 @@ export const TopBar: React.FC<TopBarProps> = ({
             soundManager.playClick();
             onToggleHighlight();
           }}
-          className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+          className={`flex items-center justify-center gap-1.5 px-3 py-2 min-h-[44px] min-w-[44px] rounded-lg text-xs font-semibold transition-all ${
             isHighlightActive
               ? 'bg-[#b45309] text-white shadow-md'
               : 'bg-[#29170e] text-[#d6b08b] hover:bg-[#3d2417] hover:text-white'
           }`}
           title="برجسته‌سازی تمام اشیاء تعاملی (برای جلوگیری از جستجوی پیکسلی)"
         >
-          <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+          <Sparkles className="w-4 h-4 text-amber-300" />
           <span className="hidden sm:inline">اشیاء تعاملی</span>
         </button>
 
@@ -81,14 +81,14 @@ export const TopBar: React.FC<TopBarProps> = ({
             soundManager.playClick();
             onOpenInventory();
           }}
-          className={`relative flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+          className={`relative flex items-center justify-center gap-1.5 px-3 py-2 min-h-[44px] min-w-[44px] rounded-lg text-xs font-semibold transition-all ${
             gameState.isInventoryOpen
               ? 'bg-[#b45309] text-white shadow-md'
               : 'bg-[#29170e] text-[#d6b08b] hover:bg-[#3d2417] hover:text-white'
           }`}
           title="خورجین خانخله"
         >
-          <Package className="w-3.5 h-3.5 text-[#e6a86c]" />
+          <Package className="w-4 h-4 text-[#e6a86c]" />
           <span className="hidden sm:inline">خورجین</span>
           {gameState.inventory.length > 0 && (
             <span className="w-4 h-4 rounded-full bg-[#993b1f] text-[10px] text-white font-bold flex items-center justify-center">
@@ -103,14 +103,14 @@ export const TopBar: React.FC<TopBarProps> = ({
             soundManager.playClick();
             onOpenJournal();
           }}
-          className={`relative flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+          className={`relative flex items-center justify-center gap-1.5 px-3 py-2 min-h-[44px] min-w-[44px] rounded-lg text-xs font-semibold transition-all ${
             gameState.isJournalOpen
               ? 'bg-[#b45309] text-white shadow-md'
               : 'bg-[#29170e] text-[#d6b08b] hover:bg-[#3d2417] hover:text-white'
           }`}
           title="کتابچه یادداشت و سرنخ‌ها"
         >
-          <BookMarked className="w-3.5 h-3.5 text-[#e6a86c]" />
+          <BookMarked className="w-4 h-4 text-[#e6a86c]" />
           <span className="hidden sm:inline">یادداشت‌ها</span>
         </button>
 
@@ -120,14 +120,14 @@ export const TopBar: React.FC<TopBarProps> = ({
             soundManager.playClick();
             onOpenHint();
           }}
-          className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#29170e] hover:bg-[#3d2417] text-[#d6b08b] hover:text-amber-200 text-xs font-semibold transition-all"
+          className="flex items-center justify-center gap-1.5 px-3 py-2 min-h-[44px] min-w-[44px] rounded-lg bg-[#29170e] hover:bg-[#3d2417] text-[#d6b08b] hover:text-amber-200 text-xs font-semibold transition-all"
           title="راهنما و الهامات"
         >
-          <Lightbulb className="w-3.5 h-3.5 text-amber-400" />
+          <Lightbulb className="w-4 h-4 text-amber-400" />
           <span className="hidden sm:inline">راهنما</span>
         </button>
 
-        <div className="w-[1px] h-5 bg-[#4e311f] mx-0.5" />
+        <div className="w-[1px] h-6 bg-[#4e311f] mx-0.5" />
 
         {/* Save / Load */}
         <button
@@ -135,7 +135,7 @@ export const TopBar: React.FC<TopBarProps> = ({
             soundManager.playClick();
             onOpenSave();
           }}
-          className="p-1.5 rounded-lg bg-[#29170e] hover:bg-[#3d2417] text-[#d6b08b] hover:text-white transition-all"
+          className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg bg-[#29170e] hover:bg-[#3d2417] text-[#d6b08b] hover:text-white transition-all"
           title="ذخیره یا بارگذاری"
         >
           <Save className="w-4 h-4" />
@@ -147,7 +147,7 @@ export const TopBar: React.FC<TopBarProps> = ({
             soundManager.playClick();
             onOpenSettings();
           }}
-          className="p-1.5 rounded-lg bg-[#29170e] hover:bg-[#3d2417] text-[#d6b08b] hover:text-white transition-all"
+          className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg bg-[#29170e] hover:bg-[#3d2417] text-[#d6b08b] hover:text-white transition-all"
           title="تنظیمات"
         >
           <Settings className="w-4 h-4" />
@@ -159,7 +159,7 @@ export const TopBar: React.FC<TopBarProps> = ({
             soundManager.playClick();
             onOpenMenu();
           }}
-          className="p-1.5 rounded-lg bg-[#3b2011] hover:bg-[#522e1a] text-[#ffd4aa] hover:text-white transition-all"
+          className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg bg-[#3b2011] hover:bg-[#522e1a] text-[#ffd4aa] hover:text-white transition-all"
           title="منوی اصلی"
         >
           <Menu className="w-4 h-4" />

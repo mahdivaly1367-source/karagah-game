@@ -40,6 +40,7 @@ import { TopBar } from './components/UI/TopBar';
 import { NotificationToast } from './components/UI/NotificationToast';
 
 const INITIAL_GAME_STATE: GameState = {
+  act: 1,
   currentScene: 'outer_alley',
   inventory: [],
   activeItemId: null,
@@ -328,6 +329,11 @@ export default function App() {
 
   // Object Interaction Handler (Delegated to PuzzleEngine & InteractionEngine)
   const handleInteractObject = useCallback((obj: InteractiveObject) => {
+    // Guard: ignore interaction if a dialogue or modal is currently active
+    if (gameState.currentDialogue || gameState.isJournalOpen || gameState.isSettingsOpen || gameState.isSaveLoadOpen || gameState.isHintOpen || gameState.inspectModal) {
+      return;
+    }
+
     // 1. If active item selected from inventory, try to use it on object via PuzzleEngine
     if (gameState.activeItemId) {
       const puzzleResult = PuzzleEngine.useItemOnObject(gameState.activeItemId, obj.id, gameState);
@@ -586,8 +592,10 @@ export default function App() {
             }));
           }}
           onContinue={(slotData) => {
+            const restoredAct = typeof slotData.state.act === 'number' ? slotData.state.act : (slotData.state.storyFlags?.act2_started ? 2 : 1);
             setGameState(prev => ({
               ...prev,
+              act: restoredAct,
               currentScene: slotData.state.currentScene,
               inventory: slotData.state.inventory,
               evidence: slotData.state.evidence,
@@ -772,8 +780,10 @@ export default function App() {
           mode={gameState.saveLoadMode}
           currentState={gameState}
           onLoadState={(slotData) => {
+            const restoredAct = typeof slotData.state.act === 'number' ? slotData.state.act : (slotData.state.storyFlags?.act2_started ? 2 : 1);
             setGameState(prev => ({
               ...prev,
+              act: restoredAct,
               currentScene: slotData.state.currentScene,
               inventory: slotData.state.inventory,
               evidence: slotData.state.evidence,

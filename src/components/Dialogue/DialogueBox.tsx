@@ -107,7 +107,7 @@ export const DialogueBox: React.FC<DialogueBoxProps> = ({
         {/* Options List */}
         {isTypingComplete && availableOptions.length > 0 && (
           <div 
-            className="mt-3 pt-3 border-t border-[#4a3322] flex flex-col gap-2"
+            className="mt-3 pt-3 border-t border-[#4a3322] flex flex-col gap-2 max-h-[35vh] overflow-y-auto pr-1"
             onClick={(e) => e.stopPropagation()}
           >
             {availableOptions.map((opt) => (

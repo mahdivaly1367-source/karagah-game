@@ -97,7 +97,7 @@ export const InventoryBar: React.FC<InventoryBarProps> = ({
           )}
           <button 
             onClick={onClose}
-            className="p-1 rounded-lg hover:bg-[#382215] text-[#b38a66] hover:text-[#fff] transition-colors"
+            className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg hover:bg-[#382215] text-[#b38a66] hover:text-[#fff] transition-colors"
             title="بستن خورجین"
           >
             <X className="w-5 h-5" />
@@ -111,7 +111,7 @@ export const InventoryBar: React.FC<InventoryBarProps> = ({
           خورجین در حال حاضر خالی است. در اتاق میرزا و حیاط به دنبال سرنخ‌ها و اشیاء بگردید.
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2.5">
+        <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2.5 max-h-[45vh] overflow-y-auto pr-1">
           {inventoryItems.map((item) => {
             const isSelected = gameState.activeItemId === item.id;
             return (
